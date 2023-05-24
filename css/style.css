@@ -32,11 +32,11 @@
     /* float: left; */
 }
 
-.js-text-format-wrapper .js-filter-wrapper {
+.webform-submission-formulaire-pour-adherent-form .js-text-format-wrapper .js-filter-wrapper {
     display: none;
 }
 
-.js-form-item.form-item.js-form-type-checkbox {
+.webform-submission-formulaire-pour-adherent-form .js-form-item.form-item.js-form-type-checkbox {
     width: 33%;
     display: inline-block;
 }
