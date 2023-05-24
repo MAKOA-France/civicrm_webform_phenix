@@ -4,8 +4,17 @@
  * Permet de griser les champs effectif et le bouton valider si le formulaire a été déjà soumis par un adhérent
  */
 function civicrm_webform_phenix_form_alter (&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  $custom_service = \Drupal::service('civicrm_webform_phenix.webform');
   if ($form_id == 'webform_submission_demande_effectifs_phenix_v2_add_form') {
-    $current_contact = \Drupal::request()->get('cid1');
+    //vérification si le token est valide sinon on redirige vers  la page d'accueil hint
+    $request = \Drupal::request();
+    $contactid = $request->query->get('cid');
+    $token = $request->get('token');
+    if ($contactid != $custom_service->decryptString($token)) {
+      return $custom_service->redirectHomePage();
+    }                                               //end vérification hint
+
+    $current_contact = \Drupal::request()->get('cid');
 
     $current_year = date('Y') - 1;
     $saisie_par_adherent = \Civi\Api4\Contact::get()
@@ -15,9 +24,9 @@ function civicrm_webform_phenix_form_alter (&$form, \Drupal\Core\Form\FormStateI
         ->addWhere('id', '=', $current_contact)
         // ->addWhere('custom_effectif_dsn.eff_annee', '=', $current_year . '-01-01')//Condition par année à voir 
         ->execute()->column('custom_effectif_dsn.saisie_adherent')[0];
-// dump($saisie_par_adherent);
-//si des données ont été déjà soumis
-if ($current_contact == 37552) {
+
+//si des données ont été déjà soumis pour cette année
+if ($current_contact == 375528787) { //cid 37552 de makoa
   $effectif = \Civi\Api4\Contact::get()
   ->addSelect('custom_effectif_dsn.saisie_adherent')
   ->addSelect('custom_effectif_dsn.effectif')
@@ -51,7 +60,6 @@ if (($saisie_par_adherent == 1) && ($saisie_par_adherent != null) && ($saisie_pa
   if ($form_id == 'webform_submission_formulaire_pour_adherent_add_form') {
     $req = \Drupal::request();
     $cid1 = $req->query->get('cid1');
-    $custom_service = \Drupal::service('civicrm_webform_phenix.webform');
     $all_datas = $custom_service->getAllDataByCid($form);
     
       $user = \Drupal::currentUser();
@@ -95,8 +103,11 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
     $materiel_location = $datas['civicrm_1_contact_1_nom_location'];
     $req = \Drupal::request();
     $cid = $req->query->get('cid');
-    $cid = explode('?', $cid);
-    $cid = $cid[0];
+    if (!is_numeric($cid)) {
+      $cid = explode('?', $cid);
+      $cid = $cid[0];
+    }
+    
     //update table descriptif entreprise
     $db = \Drupal::database();
     if ($datas) {  //todo codition 

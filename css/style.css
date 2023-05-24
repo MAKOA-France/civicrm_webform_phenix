@@ -4,6 +4,16 @@
     font-size: 2.4rem;
 }
 
+.js-form-item-civicrm-1-contact-1-marque {
+    padding-bottom: 13px;
+    padding-top: 12px;
+    width: 50% !important;
+}
+
+.chosen-container.marque-select {
+    width: 50%;
+} 
+
 .webform-submission-formulaire-pour-adherent-form #edit-pave-coordonnees > legend ,
 .webform-submission-formulaire-pour-adherent-form #edit-pave-activite- > legend {
     font-size: 1.3rem;

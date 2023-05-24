@@ -29,8 +29,10 @@ class WebformService {
   public function getAllDataByCid (&$form) {
     $req = \Drupal::request();
     $cid = $req->query->get('cid');
-    $cid = explode('?', $cid);
-    $cid = $cid[0];
+    if (!is_numeric($cid)) {
+      $cid = explode('?', $cid);
+      $cid = $cid[0];
+    }
     $token = $req->get('token');
 
     if ($cid != $this->decryptString($token)) {
@@ -83,20 +85,21 @@ class WebformService {
       $activitePrincipal =  reset($contactInfo)['org_dlr.activiteprincipale'];
       // $markup = ['#markup' => $descriptifEntreprise];
       // $descriptifEntreprise = \Drupal::service('renderer')->render($markup)->__toString();
-      // dump($descriptifEntreprise);
     }
     
     $website_url = $websites ? $websites[0] : '';
-      // dump('LOC  :' , $materiel_location,'OCC  :' ,  $materiel_occasion,'MARQUE  :' , $iterator );
 
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_contact_organization_name']['#default_value'] = $organizationName;
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_custom_50_7584']['#default_value'] = $descriptifEntreprise;
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_email_email']['#default_value'] = $email;
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_phone_phone']['#default_value'] = $phone;
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_address_street_address']['#default_value'] = $stree_address;
+     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_address_street_address']['#attributes']['disabled'] = true;
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_address_postal_code']['#default_value'] = $postal_code;
+     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_address_postal_code']['#attributes']['disabled'] = true;
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_website_url']['#default_value'] = $website_url;
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_address_city']['#default_value'] = $city;
+     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_address_city']['#attributes']['disabled'] = true;
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_activity_1_cg30_custom_7584']['#options'] = $this->getAllActivitePrincipal();
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_activity_1_cg30_custom_7584']['#default_value'] = $activitePrincipal;
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_activity_1_cg30_custom_7584']['#attributes']['disabled'] = true;
@@ -104,7 +107,9 @@ class WebformService {
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_marque']['#default_value'] = $this->getDefaultValueMarque($cid);
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_contact_video_presentation']['#default_value'] = $this->getVideoDefaultValue($cid);
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_contact_latitude']['#default_value'] = $this->getLatAndLondeDefaultValue($cid);
+     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_contact_latitude']['#attributes']['disabled'] = true;
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_contact_longitude']['#default_value'] = $this->getLatAndLondeDefaultValue($cid, false);
+     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_contact_longitude']['#attributes']['disabled'] = true;
 
     $form['actions']['submit']['#value'] = 'Enregistrer';
      
@@ -112,7 +117,7 @@ class WebformService {
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_nom_location']['#default_value'] = $this->getDefaultValueLocation($cid);
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_address_country_id']['#options'] = $this->allCountries();
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_address_country_id']['#default_value'] = $this->getDefaultCountry($cid);
-    //  dump($this->getDefaultCountry($cid));
+     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_address_country_id']['#attributes']['disabled'] = true;
 
 
     // $marquees = iterator_to_array($marquees);
@@ -248,7 +253,6 @@ class WebformService {
       'field_media_oembed_video' => $urlVideo, 
     ]);
 
-    // dump($media, $urlVideo);die;
     // Enregistrez le média.
     $media->save();
 
@@ -359,7 +363,6 @@ public function decryptString($encryptedId) {
     $decryptedId = openssl_decrypt($encrypted, $cipher, 'makoa_phenix', OPENSSL_RAW_DATA, $iv);
 
   if (!is_numeric($decryptedId)) {
-    // dump($decryptedId);
     // return $this->redirectHomePage();
   }
 
