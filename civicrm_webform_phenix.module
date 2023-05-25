@@ -210,6 +210,14 @@ function civicrm_webform_phenix_preprocess_page(&$variables)
 {
   $request = \Drupal::request();
   $variables['#attached']['library'][] = 'civicrm_webform_phenix/civicrm_webform_phenix';
+  
+  $domain = \Drupal::request()->getHost();
+  $currentUrl = \Drupal::request()->getRequestUri();
+  if ((strpos($currentUrl, '/annuaire') !== false) && ($domain == 'extranet.dlr.fr/')) {
+    // Redirect to a specific URL.
+    $response = new \Symfony\Component\HttpFoundation\RedirectResponse('https://annuairedlr.fr/annuaire/');
+    $response->send();
+  }
 }
 
 use Drupal\Core\Access\AccessResult;
