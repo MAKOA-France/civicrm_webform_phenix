@@ -99,6 +99,9 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
     $descriptif = $datas['civicrm_1_contact_1_custom_50_7584'];
     $activitePrincipal = $datas['civicrm_1_activity_1_cg30_custom_7584'];
     $marques = $datas['civicrm_1_contact_1_marque'];
+    $data_phone = $datas['civicrm_1_contact_1_phone_phone'];
+    $data_website = $datas['civicrm_1_contact_1_website_url'];
+    $data_email = $datas['civicrm_1_contact_1_email_email'];
     $url_video_presentation = $datas['civicrm_1_contact_1_contact_video_presentation'];
     $materiel_location = $datas['civicrm_1_contact_1_nom_location'];
     $req = \Drupal::request();
@@ -157,6 +160,10 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
             $custom_service->updateLocationNewSetNull ($cid, $materiel_location);
         }
 
+        $custom_service->updateMail($data_email, $cid);
+        $custom_service->updatePhone($data_phone, $cid);
+        $custom_service->updateWebsite($data_website, $cid);
+
 
         if ($data_marques) {
           //supprimer les anciennes marques
@@ -172,9 +179,9 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
               ->addValue('entity_id', $cid)
               ->execute();
           }
-        }
+        } 
           
-        if ($url_video_presentation) {
+         if ($url_video_presentation) {
           //ajout video dans media -> video en ligne  https://www.youtube.com/watch?v=73YG0olNXWo
           $query = "select field_media_oembed_video_value from media__field_media_oembed_video  where field_media_oembed_video_value = '" . $url_video_presentation . " '" ;
           $existing_video = $db->query($query)->fetch();
@@ -188,12 +195,13 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
             //assigner la video à l'entreprise
             $added_video = $custom_service->createMediaTypeVideo($url_video_presentation);
             $mid = $added_video->get('mid')->getValue()[0]['value'];
+            $custom_service->assignVideoToEntreprise($cid, $mid, $db);
             $custom_service->updatedb($cid, $mid);
 
           }
         }else {//delete url video linked with cid
           $custom_service->deleteVideoLinkedWithCid($cid);
-        }
+        } 
           
     }
 
