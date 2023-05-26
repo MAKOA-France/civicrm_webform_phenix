@@ -236,7 +236,7 @@ use Drupal\Core\Access\AccessResult;
 function civicrm_webform_phenix_entity_update(Drupal\Core\Entity\EntityInterface $entity) {
   // Check if the updated entity is a webform.
   if ($entity instanceof Drupal\civicrm_entity\Entity\CivicrmEntity) {
-    return AccessResult::allowed();
+     return AccessResult::allowed();
     /* 
     $entityType = $entity->getEntityTypeId();
     $entityId = $entity->id();
@@ -267,3 +267,29 @@ function civicrm_webform_phenix_entity_update(Drupal\Core\Entity\EntityInterface
     $accessControlHandler->savePermissions($entity, $permissions); */
   }
 }
+
+
+/**
+ * 
+ * Gestion de permission par rapport à l'utilisateur anonyme
+ * 
+ * Implements hook_entity_access().
+ */
+function civicrm_webform_phenix_entity_access($entity, $operation, $account) {
+  // return Drupal\Core\Access\AccessResult::neutral();
+  $custom_service = \Drupal::service('civicrm_webform_phenix.webform');
+   
+   $white_list_entity = $custom_service->whiteList();
+  if ($account->isAnonymous()) {
+    if (in_array($entity->id(), $white_list_entity))  {
+      if ($operation == 'submission_page') {//n'authoriser aux utilisateurs anonyme que les 
+        return Drupal\Core\Access\AccessResult::allowed();
+      }
+    }else {
+       return Drupal\Core\Access\AccessResult::forbidden();
+    }
+  } 
+
+}
+
+

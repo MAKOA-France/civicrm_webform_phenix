@@ -88,6 +88,7 @@ class WebformService {
     }
     
     $website_url = $websites ? $websites[0] : '';
+    // dump($this->encryptString(37552));
 
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_contact_organization_name']['#default_value'] = $organizationName;
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_custom_50_7584']['#default_value'] = $descriptifEntreprise;
@@ -723,5 +724,103 @@ public function allCountries () {
   return $option;
 }
 
+
+
+  public function whiteList () {
+   
+    $array = [
+      'formulaire_pour_adherent',
+      "backbuttonblock",
+      "blocbasdepage",
+      "9",
+      "alphabetique",
+      "fiche_details",
+      "asiderightlabelse",
+      "asiderigthmembreassoc",
+      "b_zf_account_menu",
+      "b_zf_branding",
+      "b_zf_content",
+      "b_zf_footer",
+      "b_zf_help",
+      "b_zf_local_actions",
+      "b_zf_local_tasks",
+      "b_zf_main_menu",
+      "b_zf_messages",
+      "b_zf_page_title",
+      "b_zf_tools",
+      "backbuttonblock",
+      "blocbasdepage",
+      "9",
+      "companyprofilesecondcolumnviewblock",
+      "customsearchblock",
+      "formulairederecherche",
+      "formulaireexposelocation_occasion_membres_associes_liste_carte",
+      "formulaireexposelocation_occasion_membres_associes_page_1",
+      "formulaireexposelocation_occasion_membres_associes_page_2",
+      "guide",
+      "headerannuairelogoblock",
+      "imagehomeannuaire",
+      "liens",
+      "2",
+      "makoa",
+      "7",
+      "menuprincipal",
+      "menuprincipal_2",
+      "pagetitle",
+      "publiciteheadblock",
+      "textepagedeconnexionentete",
+      "6",
+      "textepieddepage",
+      "8",
+      "textepourformulaires",
+      "views_block__actualites_block_1",
+      "views_block__actualites_block_2",
+      "views_block__actualites_block_3",
+      "views_block__civievents_base_sur_le_contact__block_1",
+      "views_block__civievents_base_sur_le_contact__block_1_2",
+      "views_block__civievents_base_sur_le_contact__block_2",
+      "views_block__civievents_base_sur_le_contact__block_2_2",
+      "views_block__civievents_base_sur_le_contact__block_3",
+      "views_block__civievents_base_sur_le_contact__block_4",
+      "views_block__civievents_base_sur_le_contact__block_5",
+      "views_block__fiche_block_1",
+      "views_block__hero_actualites_block_1",
+      "views_block__illustration_koama_block_1",
+      "views_block__lien_update_effectifs_lien_update_effectif",
+      "views_block__publicite_publicite_guide_en_hauteur",
+      "corrige_lien_image_page_accueil_sidebar_left",
+      "alphabetique",
+      "champ_de_recherche",
+      "civicrm",
+      "civicrm_fiche_contact_",
+      "correction_bug_liens",
+      "corrige_lien_image_page_accueil_sidebar_left",
+      "document_thumbnail",
+      "fiche_details",
+      "filtres",
+      "form_masquer_boutton_preview",
+      "front_extranet_masquer_nom_machine",
+      "image_hover_effect",
+      "koama_illustration",
+      "menu",
+      "menu_annuaire",
+      "pages_de_recherche",
+      "page_view_civicrm_event_content",
+      "submitted",
+      "user_profile",
+      "vue_guide",
+      611,       //id page annuaire,
+
+
+      //format de texte
+      'basic_html',
+      'restricted_html',
+      'developper',
+      'plain_text',
+    ];
+    
+    
+    return $array;
+  }
 
 }
