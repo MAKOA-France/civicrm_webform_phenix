@@ -40,3 +40,94 @@
     width: 33%;
     display: inline-block;
 }
+
+.form-item-civicrm-1-contact-1-address-postal-code {
+    width: 10% !important;
+}
+
+.form-item-civicrm-1-contact-1-address-city {
+    width: 15% !important;
+}
+
+.form-item-civicrm-1-contact-1-address-country-id {
+    width: 13% !important;
+}
+.form-item-civicrm-1-contact-1-address-country-id .country-list {
+    width: 100% !important;
+}
+.form-item-civicrm-1-contact-1-contact-latitude, .form-item-civicrm-1-contact-1-contact-longitude{
+    width: 14% !important;
+}
+
+.data-eco-market-sector > legend, .form-item-civicrm-1-contact-1-marque > label , .form-item-civicrm-1-contact-1-custom-50-7584-value > label,
+.form-item-civicrm-1-activity-1-cg30-custom-7584 > label, .form-item-nom-entreprise label, .form-item-civicrm-1-contact-1-phone-phone > label, 
+.form-item-civicrm-1-contact-1-email-email > label, .form-item-civicrm-1-contact-1-website-url > label, .form-item-civicrm-1-contact-1-contact-video-presentation > label{
+    font-family: "Roboto", Sans-serif;
+    font-weight: bold;
+    line-height: 28px;
+    color: #54595f;
+    font-size: 100%;
+}
+.data-eco-market-sector > legend {
+    padding-top: 4%;
+}
+.marque-select ul.chosen-choices {
+    border-radius: 7px;
+}
+
+.adress-container {
+    display: flex;
+    background: #f3f5f9;
+    border-radius: 5px 5px 5px 5px;
+}
+.form-item-civicrm-1-contact-1-address-street-address, .form-item-civicrm-1-contact-1-address-postal-code , .form-item-civicrm-1-contact-1-address-country-id,
+.form-item-civicrm-1-contact-1-address-city, .form-item-civicrm-1-contact-1-contact-latitude, .form-item-civicrm-1-contact-1-contact-longitude {
+    display: none !important;
+}
+.webform-submission-formulaire-pour-adherent-form .js-text-format-wrapper.js-form-item.form-item {
+    padding-bottom: 20px;
+}
+.data-eco-market-sector {
+    padding: 10px;
+    background-color: #f3f5f9;
+    border-radius: 5px;
+}
+
+.webform-submission-formulaire-pour-adherent-form .js-text-format-wrapper.js-form-item.form-item  {
+    padding-top: 16px !important;
+}
+
+.conteneur-block {
+    width: 100%;
+}
+.custom-row {
+    display: flex;
+}
+
+.our-ebook-cont {
+    padding: 65px 0 65px 40px;
+    letter-spacing: 1px;
+}
+.ad-firs-col {
+    width: 36%;
+    padding-left: 4%;  
+}
+.our-ebook-cont p {
+    /* font-size: 18px;
+    font-weight: 300;
+    line-height: 24px;
+    color: #7a8495;
+    margin: 15px 0; */
+}
+
+.our-ebook-cont a {
+    display: inline-block;
+    font-size: 14px;
+    background: #3c7cf6;
+    color: #fff;
+    border-radius: 3px;
+    font-weight: 600;
+    padding: 10px 20px;
+    -webkit-box-shadow: 1px 2px 5px 0 rgba(0,0,0,.35);
+    box-shadow: 1px 2px 5px 0 rgba(0,0,0,.35);
+}
