@@ -56,7 +56,7 @@
     width: 100% !important;
 }
 .form-item-civicrm-1-contact-1-contact-latitude, .form-item-civicrm-1-contact-1-contact-longitude{
-    width: 14% !important;
+    width: 16% !important;
 }
 
 .data-eco-market-sector > legend, .form-item-civicrm-1-contact-1-marque > label , .form-item-civicrm-1-contact-1-custom-50-7584-value > label,
@@ -81,7 +81,7 @@
     border-radius: 5px 5px 5px 5px;
 }
 .form-item-civicrm-1-contact-1-address-street-address, .form-item-civicrm-1-contact-1-address-postal-code , .form-item-civicrm-1-contact-1-address-country-id,
-.form-item-civicrm-1-contact-1-address-city, .form-item-civicrm-1-contact-1-contact-latitude, .form-item-civicrm-1-contact-1-contact-longitude {
+.form-item-civicrm-1-contact-1-address-city {
     display: none !important;
 }
 .webform-submission-formulaire-pour-adherent-form .js-text-format-wrapper.js-form-item.form-item {

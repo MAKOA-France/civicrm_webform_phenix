@@ -88,7 +88,6 @@ class WebformService {
     }
     
     $website_url = $websites ? $websites[0] : '';
-    // dump($this->encryptString(37552));
 
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_contact_organization_name']['#default_value'] = $organizationName;
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_custom_50_7584']['#default_value'] = $descriptifEntreprise;
@@ -109,16 +108,21 @@ class WebformService {
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_activity_1_cg30_custom_7584']['#default_value'] = $activitePrincipal;
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_activity_1_cg30_custom_7584']['#attributes']['disabled'] = true;
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_marque']['#options'] = $this->getAllMarques();
-     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_marque']['#default_value'] = $this->getDefaultValueMarque($cid);
+     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['#markup'] = '';
+     $form['contact_us_markup'] = [
+      '#type' => 'markup',
+      '#markup' => '<p><a href="mailto:contact@dlr.fr" target="_blank" rel="noreferrer noopener" class="PrimaryLink BaseLink">
+      Pour toute autre modification contactez nous sur contact@dlr.fr</a></p>',
+    ];
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_contact_video_presentation']['#default_value'] = $this->getVideoDefaultValue($cid);
      $lat = $this->getLatAndLondeDefaultValue($cid);
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_contact_latitude']['#default_value'] = $this->getLatAndLondeDefaultValue($cid);
-     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_contact_latitude']['#attributes']['class'][] = 'hide hidden';
-     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_contact_latitude']['#attributes']['disabled'] = true;
+    //  $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_contact_latitude']['#attributes']['class'][] = 'hide hidden';
+    //  $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_contact_latitude']['#attributes']['disabled'] = true;
      $lon =  $this->getLatAndLondeDefaultValue($cid, false);;
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_contact_longitude']['#default_value'] = $this->getLatAndLondeDefaultValue($cid, false);
-     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_contact_longitude']['#attributes']['class'][] = 'hide hidden';
-     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_contact_longitude']['#attributes']['disabled'] = true;
+    //  $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_contact_longitude']['#attributes']['class'][] = 'hide hidden';
+    //  $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_contact_longitude']['#attributes']['disabled'] = true;
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['nom_entreprise']['#default_value'] = $organizationName;
     $form['actions']['submit']['#value'] = 'Enregistrer';
 
@@ -126,7 +130,7 @@ class WebformService {
     $countryName = $this->getCountryNameById($country);
 
 
-     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_address_street_address'][
+     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_contact_longitude'][
       '#suffix'] = $this->html($stree_address, $postal_code, $city,$countryName, $lat, $lon);     
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_nom_location']['#options'] = $this->getAllMateriels();
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_nom_location']['#default_value'] = $this->getDefaultValueLocation($cid);
@@ -135,7 +139,6 @@ class WebformService {
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_address_country_id']['#default_value'] = $this->getDefaultCountry($cid);
     //  $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_address_country_id']['#attributes']['disabled'] = true;
 
-    // dump($this->encryptString(37552));
     // $marquees = iterator_to_array($marquees);
     // $marquees = array_column($marquees, 'id');
     // $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_marque']['#default_value'] = $marquees;
@@ -166,11 +169,7 @@ class WebformService {
                   <p>' . $postal . ' ' . $city . '</p>
                   <p>' . $country . '</p>
                   </div>
-                  <div class="col-md-6">
-                    <p> Coordonnées géographiques : </p>
-                    <p>Latitude : ' . $lat . '</p>
-                    <p>Longitude : ' . $lon . '</p>
-                  </div>
+                  
                   </div>
                 </div>
               </div>
@@ -471,7 +470,7 @@ public function updateMail ($email, $cid) {
  * Permet de mettre à jour le site web principal
  */
 public function updateWebsite ($website, $cid) {
-  return  \Civi\Api4\Website::update()
+  return  \Civi\Api4\Website::update(FALSE)
   ->addValue('url', $website)
   ->addWhere('contact_id', '=', $cid)
   ->execute();
