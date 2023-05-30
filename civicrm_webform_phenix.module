@@ -285,6 +285,9 @@ function civicrm_webform_phenix_entity_access($entity, $operation, $account) {
       if ($operation == 'submission_page') {//n'authoriser aux utilisateurs anonyme que les 
         return Drupal\Core\Access\AccessResult::allowed();
       }
+      if ($operation != 'view') {
+        return Drupal\Core\Access\AccessResult::forbidden();
+      }
     }else {
        return Drupal\Core\Access\AccessResult::forbidden();
     }

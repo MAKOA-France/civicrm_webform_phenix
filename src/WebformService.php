@@ -139,9 +139,7 @@ class WebformService {
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_address_country_id']['#default_value'] = $this->getDefaultCountry($cid);
     //  $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_address_country_id']['#attributes']['disabled'] = true;
 
-    // $marquees = iterator_to_array($marquees);
-    // $marquees = array_column($marquees, 'id');
-    // $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_marque']['#default_value'] = $marquees;
+     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_marque']['#default_value'] = $this->getDefaultValueMarque($cid);
    
       
     
