@@ -61,6 +61,7 @@
 
 .data-eco-market-sector > legend, .form-item-civicrm-1-contact-1-marque > label , .form-item-civicrm-1-contact-1-custom-50-7584-value > label,
 .form-item-civicrm-1-activity-1-cg30-custom-7584 > label, .form-item-nom-entreprise label, .form-item-civicrm-1-contact-1-phone-phone > label, 
+.form-item-civicrm-1-contact-1-contact-latitude > label, .form-item-civicrm-1-contact-1-contact-longitude > label,
 .form-item-civicrm-1-contact-1-email-email > label, .form-item-civicrm-1-contact-1-website-url > label, .form-item-civicrm-1-contact-1-contact-video-presentation > label{
     font-family: "Roboto", Sans-serif;
     font-weight: bold;
