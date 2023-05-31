@@ -469,10 +469,31 @@ public function updateMail ($email, $cid) {
  * Permet de mettre à jour le site web principal
  */
 public function updateWebsite ($website, $cid) {
-  return  \Civi\Api4\Website::update(FALSE)
-  ->addValue('url', $website)
-  ->addWhere('contact_id', '=', $cid)
-  ->execute();
+  if ($website) {
+    $websiteAlready = \Civi\Api4\Website::get(FALSE)
+      ->addSelect('url')
+      ->addWhere('contact_id', '=', $cid)
+      ->execute()->getIterator();
+      $websiteAlready = iterator_to_array($websiteAlready);
+    if (!empty($websiteAlready)) {//s'il y a déjà un site web
+      //add conditino if exist
+      return  \Civi\Api4\Website::update(FALSE)
+      ->addValue('url', $website)
+      ->addWhere('contact_id', '=', $cid)
+      ->addWhere('website_type_id', '=', 2)//principal
+      ->execute();
+    }
+    return \Civi\Api4\Website::create()
+    ->addValue('contact_id', $cid)
+    ->addValue('url', $website)
+    ->addValue('website_type_id', 2)
+    ->execute();
+  }else {//delete
+    return \Civi\Api4\Website::delete(FALSE)
+    ->addWhere('contact_id', '=', $cid)
+    ->addWhere('website_type_id', '=', 2)//principal
+    ->execute();
+  }
 }
 
 /**
