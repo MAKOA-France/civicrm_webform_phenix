@@ -114,6 +114,7 @@ class WebformService {
       '#markup' => '<p><a href="mailto:contact@dlr.fr" target="_blank" rel="noreferrer noopener" class="PrimaryLink BaseLink">
       Pour toute autre modification contactez nous sur contact@dlr.fr</a></p>',
     ];
+    $form['contact_us_markup']['#weight'] = 155;
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_contact_video_presentation']['#default_value'] = $this->getVideoDefaultValue($cid);
      $lat = $this->getLatAndLondeDefaultValue($cid);
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_contact_latitude']['#default_value'] = $this->getLatAndLondeDefaultValue($cid);
