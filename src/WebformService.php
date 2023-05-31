@@ -418,6 +418,7 @@ public function getAllMateriels () {
   $optionValues = \Civi\Api4\OptionValue::get(FALSE)
   ->addSelect('id', 'label', 'value')
   ->addWhere('option_group_id', '=', 106)
+  ->addWhere('is_active', '=', true)
   ->execute()->getIterator();
       
     $optionValues = iterator_to_array($optionValues);
@@ -479,16 +480,20 @@ public function updateWebsite ($website, $cid) {
  */
 public function updatePhone ($data_phone, $cid) {
   if ($data_phone) {
-    /* $results = \Civi\Api4\Phone::update(FALSE)
-      ->addValue('phone_numeric', $data_phone)
+    $results = false;
+ /*     $results = \Civi\Api4\Phone::update(FALSE)
+      ->addValue('phone_numeric', 0472020421)
       ->addWhere('contact_id', '=', $cid)
       ->addWhere('is_primary', '=', TRUE)
-      ->execute();
+      ->execute(); */
+
+      // $updateLon = 'update civicrm_phone set phone_numeric = "' . $data_phone . '" where contact_id = ' . $cid . ' and is_primary = 1';
+      // $results = \Drupal::database()->query($updateLon)->execute();
       if ($results) {
 
       }else {
-        $custom_service->redirectHomePage();
-      } */
+        //$this->redirectHomePage();
+      } 
   }
 }
 

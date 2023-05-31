@@ -92,7 +92,7 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
   // For example, you can access and modify the submission values using:
   // $webform_submission->setDataValue('field_name', 'new value');
   
-  $webform = $webform_submission->getWebform();
+ $webform = $webform_submission->getWebform();
   $custom_service = \Drupal::service('civicrm_webform_phenix.webform');
   if ($webform->id() == 'formulaire_pour_adherent') {
     $datas = $webform_submission->getData();
@@ -115,50 +115,35 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
     $db = \Drupal::database();
     if ($datas) {  //todo codition 
       $descriptif = $descriptif['value'];
-      $descriptif = Drupal\Core\Render\Markup::create($descriptif);
+       $descriptif = Drupal\Core\Render\Markup::create($descriptif);
       
       
       $results = \Civi\Api4\Contact::update(FALSE)
         ->addValue('org_dlr.descriptif_entreprise', $descriptif)
         ->addValue('org_dlr.activiteprincipale', $activitePrincipal)
         ->addWhere('id', '=', $cid)
-        ->execute();
+        ->execute(); 
 
         $data_marques = $datas['civicrm_1_contact_1_marque'];
         $data_latitude = $datas['civicrm_1_contact_1_contact_latitude'];
         $data_longitude = $datas['civicrm_1_contact_1_contact_longitude'];
-
-        //update lat & lon
-        if ($data_latitude) {
-          $update_lat = \Civi\Api4\Address::update(FALSE)
-            ->addValue('geo_code_1', $data_latitude)
-            ->addWhere('contact_id', '=', $cid)
-            ->addWhere('is_primary', '=', TRUE)
-            ->execute();
-          }
-          
-          //update lat & lon
-          if ($data_longitude) {
-            $update_lon = \Civi\Api4\Address::update(FALSE)
-            ->addValue('geo_code_2', $data_longitude)
-            ->addWhere('contact_id', '=', $cid)
-            ->addWhere('is_primary', '=', TRUE)
-            ->execute();
-        }
-
+       
+  
         //update materiel location
-        if ($materiel_location ) {
-           $results = \Civi\Api4\Contact::update()
+         if (!empty($materiel_location)) {
+
+          $materiel_location = array_values($materiel_location);
+
+          $results = \Civi\Api4\Contact::update(FALSE)
             ->addValue('Materiel.nom_location', $materiel_location)
             ->addWhere('id', '=', $cid)
-            ->execute(); 
-
+            ->execute();
             //update materiel location_new
 
-            $custom_service->updateLocationNew ($cid, $materiel_location);
+             $custom_service->updateLocationNew ($cid, $materiel_location);
         }else {// si aucun materiel location n'est selectionné
-            $custom_service->updateLocationNewSetNull ($cid, $materiel_location);
-        }
+             $custom_service->updateLocationNewSetNull ($cid, $materiel_location);
+        } 
 
         $custom_service->updateMail($data_email, $cid);
         $custom_service->updatePhone($data_phone, $cid);
@@ -202,8 +187,16 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
         }else {//delete url video linked with cid
           $custom_service->deleteVideoLinkedWithCid($cid);
         } 
-          
-    }
+
+        
+        //update lat & lon
+        if ($data_latitude) {
+          $res = \Drupal::database()->query("update civicrm_address set geo_code_1 = '". $data_latitude."' where contact_id = $cid and is_primary = 1")->execute();
+        }
+        if ($data_longitude) {
+          $res = \Drupal::database()->query("update civicrm_address set geo_code_2 = '".$data_longitude."' where contact_id = $cid and is_primary = 1")->execute();
+        }
+    } 
 
   }
 
@@ -286,10 +279,14 @@ function civicrm_webform_phenix_entity_access($entity, $operation, $account) {
         return Drupal\Core\Access\AccessResult::allowed();
       }
       if ($operation != 'view') {
-        return Drupal\Core\Access\AccessResult::forbidden();
+        $whiteListFormat = ['restricted_html', 'basic_html', 'developper', 'plain_text'];
+        if ($entity instanceof Drupal\filter\Entity\FilterFormat && in_array($entity->id(), $whiteListFormat)) {
+          return Drupal\Core\Access\AccessResult::allowed();
+        }
+         return Drupal\Core\Access\AccessResult::forbidden();
       }
     }else {
-       return Drupal\Core\Access\AccessResult::forbidden();
+        return Drupal\Core\Access\AccessResult::forbidden();
     }
   } 
 
