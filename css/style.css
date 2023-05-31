@@ -59,6 +59,11 @@
     width: 16% !important;
 }
 
+/*annuaire page geographique */
+.section-annuaire .chosen-container-multi {
+    padding-bottom: 7px;
+}
+
 .data-eco-market-sector > legend, .form-item-civicrm-1-contact-1-marque > label , .form-item-civicrm-1-contact-1-custom-50-7584-value > label,
 .form-item-civicrm-1-activity-1-cg30-custom-7584 > label, .form-item-nom-entreprise label, .form-item-civicrm-1-contact-1-phone-phone > label, 
 .form-item-civicrm-1-contact-1-contact-latitude > label, .form-item-civicrm-1-contact-1-contact-longitude > label,
