@@ -283,10 +283,10 @@ function civicrm_webform_phenix_entity_access($entity, $operation, $account) {
         if ($entity instanceof Drupal\filter\Entity\FilterFormat && in_array($entity->id(), $whiteListFormat)) {
           return Drupal\Core\Access\AccessResult::allowed();
         }
-         return Drupal\Core\Access\AccessResult::forbidden();
+        // return Drupal\Core\Access\AccessResult::forbidden();
       }
     }else {
-        return Drupal\Core\Access\AccessResult::forbidden();
+        // return Drupal\Core\Access\AccessResult::forbidden();
     }
   } 
 
