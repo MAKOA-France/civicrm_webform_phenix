@@ -503,11 +503,11 @@ public function updateWebsite ($website, $cid) {
 public function updatePhone ($data_phone, $cid) {
   if ($data_phone) {
     $results = false;
- /*     $results = \Civi\Api4\Phone::update(FALSE)
-      ->addValue('phone_numeric', 0472020421)
-      ->addWhere('contact_id', '=', $cid)
-      ->addWhere('is_primary', '=', TRUE)
-      ->execute(); */
+    $results = \Civi\Api4\Phone::update(FALSE)
+    ->addValue('phone_numeric', $data_phone)
+    ->addValue('phone', $data_phone)
+    ->addWhere('contact_id', '=', $cid)
+    ->execute();
 
       // $updateLon = 'update civicrm_phone set phone_numeric = "' . $data_phone . '" where contact_id = ' . $cid . ' and is_primary = 1';
       // $results = \Drupal::database()->query($updateLon)->execute();
