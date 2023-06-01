@@ -434,6 +434,11 @@ public function getAllMateriels () {
 }
 
 public function updateLocationNewSetNull ($cid) {
+  \Civi\Api4\Contact::update(FALSE)
+            ->addValue('Materiel.nom_location', [])
+            ->addWhere('id', '=', $cid)
+            ->execute();
+
   return \Civi\Api4\Contact::update(FALSE)
   ->addValue('Materiel.nom_location_new', [])
   ->addWhere('id', '=', $cid)
@@ -463,6 +468,12 @@ public function updateMail ($email, $cid) {
   ->addValue('email', $email)
   ->addWhere('contact_id', '=', $cid)
   ->addWhere('is_primary', '=', TRUE)
+  ->execute();
+}
+
+public function deleteMarque ($cid) {
+  return \Civi\Api4\CustomValue::delete('Marques', FALSE)
+  ->addWhere('entity_id', '=', $cid)
   ->execute();
 }
 
