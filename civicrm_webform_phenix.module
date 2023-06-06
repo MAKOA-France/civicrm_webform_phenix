@@ -164,8 +164,6 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
               ->addValue('entity_id', $cid)
               ->execute();
           }
-        }else {
-          $custom_service->deleteMarque($cid);
         } 
           
          if ($url_video_presentation) {

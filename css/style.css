@@ -137,3 +137,57 @@
     -webkit-box-shadow: 1px 2px 5px 0 rgba(0,0,0,.35);
     box-shadow: 1px 2px 5px 0 rgba(0,0,0,.35);
 }
+
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+    .webform-submission-formulaire-pour-adherent-form .js-form-item.form-item.js-form-type-textfield,
+     .webform-submission-formulaire-pour-adherent-form .js-form-item.form-item.js-form-type-select,
+     .webform-submission-formulaire-pour-adherent-form .js-form-item.form-item.js-form-type-email {
+        width: 32%;
+     }
+
+     .page-form-formulaire-pour-adherent .grid-margin-x .medium-9.cell {
+        width: 96%;
+     }
+
+    }
+    
+@media only screen and (max-width: 600px) {
+    .page-form-formulaire-pour-adherent .grid-x.grid-margin-x.align-middle .medium-4.cell{
+        width: 37%;
+        margin: 0;
+    }
+    .page-form-formulaire-pour-adherent .grid-x.grid-margin-x.align-middle .medium-8.cell{
+        margin: 0;
+        width: 60%;
+    }
+    .position-initial.block-civicrm-custom-block img.img-logo-head-annuaire {
+        width: 100%;
+        padding-left: 26px;
+    }
+
+    .webform-submission-formulaire-pour-adherent-form .js-form-item.form-item.js-form-type-checkbox {
+        width: 49%;
+        display: inline-block;
+    }
+    .webform-submission-formulaire-pour-adherent-form .webform-options-display-one-column.form-checkboxes label {
+        display: contents;
+    }
+
+    .webform-submission-formulaire-pour-adherent-form #edit-civicrm-1-contact-1-fieldset-fieldset > legend {
+        font-size: 1.4rem;
+    }
+    .webform-submission-formulaire-pour-adherent-form .js-form-item.form-item.js-form-type-textfield,
+     .webform-submission-formulaire-pour-adherent-form .js-form-item.form-item.js-form-type-select, 
+     .webform-submission-formulaire-pour-adherent-form .js-form-item.form-item.js-form-type-email {
+        width: 48%;
+    }
+    .form-item-civicrm-1-contact-1-contact-latitude, .form-item-civicrm-1-contact-1-contact-longitude {
+        width: 24% !important;
+    }
+    .our-ebook-cont {
+        padding: 35px 0 35px 40px;
+    }
+    .position-initial.block-civicrm-custom-block img.img-logo-head-annuaire {
+        width: 41%;
+    }
+}
