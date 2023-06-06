@@ -138,6 +138,7 @@
     box-shadow: 1px 2px 5px 0 rgba(0,0,0,.35);
 }
 
+<<<<<<< HEAD
 @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
     .webform-submission-formulaire-pour-adherent-form .js-form-item.form-item.js-form-type-textfield,
      .webform-submission-formulaire-pour-adherent-form .js-form-item.form-item.js-form-type-select,
@@ -191,3 +192,19 @@
         width: 41%;
     }
 }
+=======
+.page-form-formulaire-pour-adherent .menu li.menu-item a {
+    color: #707070;
+    font-weight: bold;
+    font-size: 100%;
+    display: flex;
+    padding: 8px 15px;
+    align-items: center;
+    text-transform: capitalize;
+  }
+  
+  .page-form-formulaire-pour-adherent  header .top-bar {
+    background: white;
+    border: 1px solid;
+  }
+>>>>>>> c77540cd79ea8cb6e384317ed277d1db24e06667
