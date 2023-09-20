@@ -362,8 +362,8 @@ function civicrm_webform_phenix_preprocess_page(&$variables)
   $currentUrl = \Drupal::request()->getRequestUri();
   if ((strpos($currentUrl, '/annuaire') !== false) && ($domain == 'extranet.dlr.fr')) {
     // Redirect to a specific URL.
-    $response = new \Symfony\Component\HttpFoundation\RedirectResponse('https://annuairedlr.fr/annuaire/');
-    $response->send();
+   // $response = new \Symfony\Component\HttpFoundation\RedirectResponse('https://annuairedlr.fr/annuaire/');
+   // $response->send();
   }
 }
 
