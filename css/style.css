@@ -282,7 +282,7 @@ fieldset.famille_location_field {
     box-shadow: 1px 2px 5px 0 rgba(0,0,0,.35);
 }
 
-<<<<<<< HEAD
+
 @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
     .webform-submission-formulaire-pour-adherent-form .js-form-item.form-item.js-form-type-textfield,
      .webform-submission-formulaire-pour-adherent-form .js-form-item.form-item.js-form-type-select,
@@ -336,7 +336,7 @@ fieldset.famille_location_field {
         width: 41%;
     }
 }
-=======
+
 .page-form-formulaire-pour-adherent .menu li.menu-item a {
     color: #707070;
     font-weight: bold;
@@ -351,4 +351,4 @@ fieldset.famille_location_field {
     background: white;
     border: 1px solid;
   }
->>>>>>> c77540cd79ea8cb6e384317ed277d1db24e06667
+
