@@ -17,7 +17,7 @@ function civicrm_webform_phenix_form_alter (&$form, \Drupal\Core\Form\FormStateI
     $current_contact = \Drupal::request()->get('cid');
 
     $current_year = date('Y') - 1;
-    $saisie_par_adherent = \Civi\Api4\Contact::get()
+    $saisie_par_adherent = \Civi\Api4\Contact::get(FALSE)
         ->addSelect('custom_effectif_dsn.saisie_adherent')
         ->addSelect('custom_effectif_dsn.effectif')
         ->addJoin('Custom_effectif_dsn AS custom_effectif_dsn', 'LEFT')
@@ -27,7 +27,7 @@ function civicrm_webform_phenix_form_alter (&$form, \Drupal\Core\Form\FormStateI
 
 //si des données ont été déjà soumis pour cette année
 if ($current_contact == 375528787) { //cid 37552 de makoa
-  $effectif = \Civi\Api4\Contact::get()
+  $effectif = \Civi\Api4\Contact::get(FALSE)
   ->addSelect('custom_effectif_dsn.saisie_adherent')
   ->addSelect('custom_effectif_dsn.effectif')
   ->addJoin('Custom_effectif_dsn AS custom_effectif_dsn', 'LEFT')
@@ -99,17 +99,127 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
     $descriptif = $datas['civicrm_1_contact_1_custom_50_7584'];
     $activitePrincipal = $datas['civicrm_1_activity_1_cg30_custom_7584'];
     $marques = $datas['civicrm_1_contact_1_marque'];
+    $materielOccasion = $datas['civicrm_1_contact_1_famille_occasion'];
     $data_phone = $datas['civicrm_1_contact_1_phone_phone'];
     $data_website = $datas['civicrm_1_contact_1_website_url'];
     $data_email = $datas['civicrm_1_contact_1_email_email'];
     $url_video_presentation = $datas['civicrm_1_contact_1_contact_video_presentation'];
     $materiel_location = $datas['civicrm_1_contact_1_nom_location'];
+    $default_value_all = json_decode($datas['valeur_par_defaut_des_champ']);
+    
+    $isThereAnyDataSubmited = false;
+    
+    foreach($datas as $key => $data) {
+      switch($key) {
+        case 'civicrm_1_contact_1_phone_phone':
+          if($data != $default_value_all->phone) {
+            $isThereAnyDataSubmited = true;
+          }
+          break;
+        case 'civicrm_1_contact_1_email_email':
+          if($data != $default_value_all->email) {
+            $isThereAnyDataSubmited = true;
+          }
+          break;
+        case 'civicrm_1_contact_1_website_url':
+          if($data != $default_value_all->website) {
+            $isThereAnyDataSubmited = true;
+          }
+          break;
+        case 'civicrm_1_contact_1_contact_video_presentation':
+          if($data != $default_value_all->presentation) {
+            $isThereAnyDataSubmited = true;
+          }
+          break;
+        case 'civicrm_1_contact_1_famille_occasion':
+          if($data != $default_value_all->materiel_occasion) {
+            $isThereAnyDataSubmited = true;
+          }
+          break;
+        case 'civicrm_1_contact_1_nom_location':
+          if($data != $default_value_all->type_materiel) {
+            $isThereAnyDataSubmited = true;
+          }
+          break;
+        case 'civicrm_1_activity_1_activity_details':
+          if($data['value']) {
+            $isThereAnyDataSubmited = true;
+          }
+          break;
+        case 'civicrm_2_activity_1_activity_details':
+          if ($data['value'] || (!$custom_service->areMultidimensionalArraysEqual($marques, $default_value_all->marque))){
+            $isThereAnyDataSubmited = true;
+          }
+          break;
+      }
+    }
+    
     $req = \Drupal::request();
     $cid = $req->query->get('cid');
     if (!is_numeric($cid)) {
       $cid = explode('?', $cid);
       $cid = $cid[0];
     }
+    
+    /**$optionValues = \Civi\Api4\OptionValue::get(FALSE)
+     ->addSelect('label')
+     ->addWhere('value', '=', 3)
+     ->addWhere('option_group_id', '=', 2)
+     ->execute(); */
+     
+     $detail_activite_address = $datas['civicrm_1_activity_1_activity_details']['value'];
+     $activite_subject = "Annuaire - Mise à jour par l'adhérent " . $custom_service->getOrganizationName($cid);
+     
+     //ajout activité 
+     if ($detail_activite_address) {
+       $all_activity['Adresse : '] =  $detail_activite_address;
+      }
+      
+      $new_marque = $datas['civicrm_2_activity_1_activity_details']['value'];
+      
+      $all_marques = $custom_service->getAllMarqueLabel($marques, $default_value_all->marque);
+      
+    
+    if ($new_marque) {
+      $all_activity['Marque : '] =  $new_marque;
+    }
+
+    if ((!$custom_service->areMultidimensionalArraysEqual($marques, $default_value_all->marque))) {
+      $all_activity['Marque : '] =  $all_marques;
+    }
+    
+    
+    if ($activitePrincipal) {
+      $label_main_activity = $custom_service->getLabelMainActivityById($activitePrincipal);
+      $all_activity['Activité principale : '] =  $label_main_activity->label;
+    }
+
+    if ($materielOccasion && ($default_value_all->materiel_occasion != $materielOccasion)) {
+      $all_activity['Matériel d\'occasion '] =  $custom_service->getLabelMaterielOccByIds($materielOccasion);
+    }
+
+    if ($data_phone && ($default_value_all->phone != $data_phone)) {
+      $all_activity['Numéro téléphone : '] =  $data_phone;
+    }
+    if ($data_email && ($default_value_all->email != $data_email)) {
+      $all_activity['Email : '] =  $data_email;
+    }
+    if ($data_website && ($default_value_all->website != $data_website)) {
+      $all_activity['Site web : '] =  $data_website;
+    }
+    if ($url_video_presentation && ($default_value_all->presentation != $url_video_presentation)) {
+      $all_activity['Url présentation (video)  : '] =  $url_video_presentation;
+    }
+    if ($descriptif['value'] && ($default_value_all->descriptif != $descriptif['value'])) {
+      $all_activity['Descriptif entreprise : '] =  $descriptif['value'];
+    }
+
+
+
+    if (!$isThereAnyDataSubmited) {
+      $all_activity = ['Modification' => 'Validé par l\'adherent sans modification'];
+    }
+    $custom_service->createActivity($cid, $activite_subject, $all_activity);
     
     //update table descriptif entreprise
     $db = \Drupal::database();
@@ -120,7 +230,7 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
       
       $results = \Civi\Api4\Contact::update(FALSE)
         ->addValue('org_dlr.descriptif_entreprise', $descriptif)
-        ->addValue('org_dlr.activiteprincipale', $activitePrincipal)
+        // ->addValue('org_dlr.activiteprincipale', $activitePrincipal)  //Ne Modifie pas directement l'activité pple
         ->addWhere('id', '=', $cid)
         ->execute(); 
 
@@ -128,6 +238,9 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
         $data_latitude = $datas['civicrm_1_contact_1_contact_latitude'];
         $data_longitude = $datas['civicrm_1_contact_1_contact_longitude'];
        
+        //Update matériel occasion
+        $custom_service->updateMaterielOccasion ($cid, $materielOccasion);
+
   
         //update materiel location
          if (!empty($materiel_location)) {
@@ -145,11 +258,11 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
              $custom_service->updateLocationNewSetNull ($cid, $materiel_location);
         } 
 
-        $custom_service->updateMail($data_email, $cid);
-        $custom_service->updatePhone($data_phone, $cid);
-        $custom_service->updateWebsite($data_website, $cid);
+        // $custom_service->updateMail($data_email, $cid);
+        // $custom_service->updatePhone($data_phone, $cid);
+        // $custom_service->updateWebsite($data_website, $cid);
 
-
+        /* TODO commented cause we don't want to edit marque directly
         if ($data_marques) {
           //supprimer les anciennes marques
           $delete_marque = \Civi\Api4\CustomValue::delete('Marques', FALSE)
@@ -164,9 +277,9 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
               ->addValue('entity_id', $cid)
               ->execute();
           }
-        } 
+        }  */
           
-         if ($url_video_presentation) {
+        /*          if ($url_video_presentation) {//TODO do not edit directly video presentation
           //ajout video dans media -> video en ligne  https://www.youtube.com/watch?v=73YG0olNXWo
           $query = "select field_media_oembed_video_value from media__field_media_oembed_video  where field_media_oembed_video_value = '" . $url_video_presentation . " '" ;
           $existing_video = $db->query($query)->fetch();
@@ -186,19 +299,15 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
           }
         }else {//delete url video linked with cid
           $custom_service->deleteVideoLinkedWithCid($cid);
-        } 
-
-        
-        //update lat & lon
-        if ($data_latitude) {
-          $res = \Drupal::database()->query("update civicrm_address set geo_code_1 = '". $data_latitude."' where contact_id = $cid and is_primary = 1")->execute();
-        }
-        if ($data_longitude) {
-          $res = \Drupal::database()->query("update civicrm_address set geo_code_2 = '".$data_longitude."' where contact_id = $cid and is_primary = 1")->execute();
-        }
+        }  */
     } 
 
+    // $url = "/form/formulaire-pour-adherent?cid=21293%3F3FaddressId%3D10449&token=a84776365a064acdf5e14fda7d4fc3c301e2b872b883462e733907d3da4779a9";
+    // $response = new \Symfony\Component\HttpFoundation\RedirectResponse($url);
+    // return $response->send();
+    $custom_service->redirectAfterSubmit();
   }
+  
 
  
 }
@@ -291,5 +400,18 @@ function civicrm_webform_phenix_entity_access($entity, $operation, $account) {
   } 
 
 }
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter() for webform confirmation pages.
+ */
+function civicrm_webform_phenix_theme_suggestions_webform_confirmation_alter(array &$suggestions, array $variables) {
+  /** @var \Drupal\webform\WebformSubmissionInterface $webform_submission */
+  $webform_submission = $variables['webform'];
+  // /** @var \Drupal\webform\WebformInterface $webform */
+  $webform = $webform_submission->id();
+  // dump($variables);
+  $suggestions[] = 'webform_confirmation__' . $webform;
+}
+
 
 

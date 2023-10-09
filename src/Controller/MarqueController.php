@@ -77,22 +77,17 @@ class MarqueController extends ControllerBase
   public function backToForm() {
     $req = \Drupal::request();
     $getId = $req->query->get('id');
+    $getId = $getId ? $getId : \Drupal::service('session')->get('current_contact_id');
     $custom_service = \Drupal::service('civicrm_webform_phenix.webform');
     $cryptedId = $custom_service->encryptString($getId);
-    $addressId = $this->getAddressID($getId);
+    $addressId = $custom_service->getAddressID($getId);
     
     $urlBackLink = '/form/formulaire-pour-adherent?cid=' . $getId . '?3FaddressId=' . $addressId . '&token=' . $cryptedId;
-    return new Response($urlBackLink);
+
+    $urlVerifyAgence = '<a href="/civicrm/verifie-agence-liste#?id=' . $getId . '&token=' . $cryptedId . '" class="button btn-blue">Vérifier les agences</a>';
+    $html_verify = '<div class="verify-agence"><p class="see-all-agence">vos informations sont enregistrées. Merci de bien vouloir vérifier la liste de vos agences.</p>  ' . $urlVerifyAgence . '   </div>';
+    return new JsonResponse(['back_link' => $urlBackLink, 'verify_agence' => $html_verify, 'btn_verify' => $urlVerifyAgence]);
   }
 
-  private function getAddressID ($cid) {
-    $civicrm = \Drupal::service('civicrm');
-    $civicrm->initialize();     
 
-    $addresses = \Civi\Api4\Address::get(FALSE)
-      ->addSelect('id')
-      ->addWhere('contact_id', '=', $cid)
-      ->execute()->column('id')[0];
-    return $addresses;
-  }
 }

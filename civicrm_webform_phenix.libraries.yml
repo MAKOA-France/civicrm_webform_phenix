@@ -4,4 +4,6 @@ civicrm_webform_phenix:
     component:
       css/style.css: {}
   js:
-    js/script.js: {}    
+    js/script.js: { weight: -1 }  
+  dependencies:
+    - core/drupal.dialog

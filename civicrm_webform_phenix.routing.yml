@@ -14,3 +14,35 @@ civicrm_webform_phenix.get_back_to_form:
     _title: 'Lien de retour'
   requirements:
     _permission: 'access content'
+
+civicrm_webform_phenix.form:
+  path: '/verifie-agence-liste'
+  defaults:
+    _form: '\Drupal\civicrm_webform_phenix\Form\AddNewAgenceForm'
+    _title: "Formulaire d'ajout agence par les adherents"
+  requirements:
+    _permission: 'access content' # Vous pouvez ajuster les permissions selon vos besoins
+
+civicrm_webform_phenix.edit_agence:
+  path: '/civicrm/verifie-agence-liste/agenceId'
+  defaults:
+    _controller: '\Drupal\civicrm_webform_phenix\Controller\EditAgenceController::editAgence'
+    _title: 'Page edit agence'
+  requirements:
+    _permission: 'access content'
+
+civicrm_webform_phenix.checkToken:
+  path: '/civicrm/verifie-agence-liste/checkToken'
+  defaults:
+    _controller: '\Drupal\civicrm_webform_phenix\Controller\EditAgenceController::checkToken'
+    _title: 'Page liste agence, check si c\est le bon token'
+  requirements:
+    _permission: 'access content'
+
+civicrm_webform_phenix.validate_without_modification:
+  path: '/form/formulaire-pour-adherent/validate-without-modification'
+  defaults:
+    _controller: '\Drupal\civicrm_webform_phenix\Controller\ValidateWithoutModificationController::validate'
+    _title: 'Valider le formulaire adherent sans modification'
+  requirements:
+    _permission: 'access content'

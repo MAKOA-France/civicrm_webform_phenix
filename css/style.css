@@ -1,7 +1,74 @@
+.our-ebook > .container {
+    display: flex;
+}
+.our-ebook > .container .adress-container {
+    width: 35%;
+}
+.our-ebook > .container .adress-container .ad-firs-col {
+    width: 100%;
+}
+
+.our-ebook > .container > fieldset {
+    width: 75%;
+}
+.our-ebook > .container > fieldset >legend {
+    display: none;
+}
+.our-ebook > .container .form-item-civicrm-1-activity-1-activity-activity-type-id, .our-ebook > .container .form-item-civicrm-1-activity-1-activity-subject{
+    display: none;
+}
+
+fieldset.famille_location_field {
+    top: 19px;
+    margin-top: 25px;
+}
+
 .webform-submission-formulaire-pour-adherent-form #edit-civicrm-1-contact-1-fieldset-fieldset > legend {
     text-align: center;
     font-weight: 900;
-    font-size: 2.4rem;
+    font-size: 1.8rem;
+}
+.custom-class-wrapper {
+    margin-top: -38px;
+}
+
+.custom-class-wrapper > label {
+    font-family: "Roboto", Sans-serif;
+    font-weight: bold;
+    line-height: 28px;
+    color: #54595f;
+    font-size: 100%;
+}
+.form-item-civicrm-1-contact-1-contact-video-presentation {
+    padding-top: 28px;
+}
+
+.valid-without-modif {
+    background-color: #010b11 !important;
+    color: white;
+}
+
+.custom-note-warning {
+    font-size: 14px;
+    text-align: right;
+    display: flex;
+    flex-direction: column-reverse;
+    padding-right: 15px;
+}
+
+.btn-blue {
+    background: #0071b8 !important;
+    float: right;
+    margin-top: 28px !important;
+}
+
+.page-form-formulaire-pour-adherent .form-actions.form-wrapper {
+    display: inline-flex;
+    gap: 28px;
+}
+
+[name="civicrm_1_contact_1_website_url"], [name="civicrm_1_contact_1_contact_video_presentation"] {
+    margin-bottom: 0 !important;
 }
 
 .js-form-item-civicrm-1-contact-1-marque {
@@ -20,6 +87,9 @@
     padding-top: 24px;
 }
 
+.webform-submission-formulaire-pour-adherent-form .cke_button.cke_button__drupalimage.cke_button_off {
+    display: none;
+}
 .webform-submission-formulaire-pour-adherent-form .js-form-item.form-item.js-form-type-textfield ,
 .webform-submission-formulaire-pour-adherent-form .js-form-item.form-item.js-form-type-select,
 .webform-submission-formulaire-pour-adherent-form .js-form-item.form-item.js-form-type-email{
@@ -32,7 +102,63 @@
     /* float: left; */
 }
 
+.webform-submission-formulaire-pour-adherent-form .js-form-item.js-form-type-textfield.form-item-civicrm-1-contact-1-website-url {
+    padding-right: 10px;
+    padding-top: 28px;
+}
+.webform-submission-formulaire-pour-adherent-form .js-form-item.js-form-type-textfield.form-item-civicrm-1-contact-1-contact-video-presentation {
+    float: right;
+}
+.webform-submission-formulaire-pour-adherent-form .js-form-item.js-form-type-textfield.form-item-civicrm-1-contact-1-website-url, 
+.webform-submission-formulaire-pour-adherent-form .js-form-item.js-form-type-textfield.form-item-civicrm-1-contact-1-contact-video-presentation {
+    width: 49%;
+
+}
+.d-inline-50 {
+    width: 47%;
+    display: inline-block;
+    margin-right: 2%;
+}
+
+#custom-popup .d-inlines {
+    width: 47%;
+}
+
+.d-inlines {
+    width: 31%;
+    display: inline-block;
+    margin-right: 2%;
+}
+.d-inlines.js-form-item-country {
+    padding-bottom: 25px;
+}
+
+.js-form-item-civicrm-1-contact-1-marque {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.default-mark {
+    float: left;
+    display: inline-block;
+    width: 30% !important;  
+}
+
+.verify-agence {
+    display: flex;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .webform-submission-formulaire-pour-adherent-form .js-text-format-wrapper .js-filter-wrapper {
+    display: none;
+}
+
+.page-form-formulaire-pour-adherent #content {
+    width: 100%;
+}
+.page-form-formulaire-pour-adherent #sidebar_left {
     display: none;
 }
 
@@ -63,11 +189,20 @@
 .section-annuaire .chosen-container-multi {
     padding-bottom: 7px;
 }
+.c-activity-main {
+    display: inline-flex;
+    gap: 200px;
+}
+.chosen-single span, .webform-submission-formulaire-pour-adherent-form  p {
+    font-size: 1rem;
+}
 
-.data-eco-market-sector > legend, .form-item-civicrm-1-contact-1-marque > label , .form-item-civicrm-1-contact-1-custom-50-7584-value > label,
+.data-eco-market-sector > legend, .form-item-civicrm-1-contact-1-marque > label , .form-item-civicrm-1-contact-1-custom-50-7584-value > label, .famille_location_field legend span,
 .form-item-civicrm-1-activity-1-cg30-custom-7584 > label, .form-item-nom-entreprise label, .form-item-civicrm-1-contact-1-phone-phone > label, 
-.form-item-civicrm-1-contact-1-contact-latitude > label, .form-item-civicrm-1-contact-1-contact-longitude > label,
-.form-item-civicrm-1-contact-1-email-email > label, .form-item-civicrm-1-contact-1-website-url > label, .form-item-civicrm-1-contact-1-contact-video-presentation > label{
+.form-item-civicrm-1-contact-1-contact-latitude > label, .form-item-civicrm-1-contact-1-contact-longitude > label, .activity-main-label,
+.form-item-civicrm-1-contact-1-email-email > label, .form-item-civicrm-1-contact-1-website-url > label, .form-item-civicrm-1-contact-1-contact-video-presentation > label,
+.d-inline-50 label, .d-inlines label, .label-marque
+{
     font-family: "Roboto", Sans-serif;
     font-weight: bold;
     line-height: 28px;
@@ -83,7 +218,6 @@
 
 .adress-container {
     display: flex;
-    background: #f3f5f9;
     border-radius: 5px 5px 5px 5px;
 }
 .form-item-civicrm-1-contact-1-address-street-address, .form-item-civicrm-1-contact-1-address-postal-code , .form-item-civicrm-1-contact-1-address-country-id,
@@ -111,8 +245,18 @@
 }
 
 .our-ebook-cont {
-    padding: 65px 0 65px 40px;
     letter-spacing: 1px;
+}
+.form-adherent-adress {
+    font-weight: normal;
+    font-family: "Roboto", Sans-serif;
+    font-weight: bold;
+    line-height: 28px;
+    color: #54595f;
+    font-size: 100%;
+}
+.our-ebook-cont .custom-row .ad-firs-col {
+    padding-left: 0;
 }
 .ad-firs-col {
     width: 36%;

@@ -2,20 +2,72 @@
 
     Drupal.behaviors.webform = {
       attach: function(context, settings) {
+        jQuery.noConflict();
+
         $(window).on('load',function() {
+
+
+            //formulaire adherent 
+            let tr = $( 'body').find('.table.table-striped tbody tr');
+            let btnw = $( 'body').find('.btn-warning');
+         
+            $('body').once('leaflet').on('click', '.table.table-striped tbody tr .btn-default', function (e) {
+                e.preventDefault();
+                let idAgence = $(this).attr('ng-href').split('/#')[1];
+                let cid = idAgence;
+
+                $.ajax({
+                    url: '/civicrm/verifie-agence-liste/agenceId',
+                    type: "POST",
+                    data: {agenceId: idAgence},
+                    success: (successResult, val, ee) => {
+                    let address = successResult.address;
+                    let mail = successResult.mail;
+                    let name = successResult.name;
+                    $('[name="name_agence"]').val(name);
+                    $('[name="email_agence"]').val(mail);
+                    $('[name="street_agence"]').val(address.street_address);
+                    $('[name="postal_code_agence"]').val(address.postal_code);
+                    $('[name="city_agence"]').val(address.city);
+                    $('[name="city_agence"]').val(address.city);
+                    $('[name="country_agence"]').val(address.country_id);
+                    $('[name="current_agence_id"]').val(idAgence);
+                    },
+                    error: function(error) {
+                    console.log(error, 'ERROR')
+                    }
+                });
+
+                $('[name="names"]').val('test')
+
+                    Drupal.dialog('#custom-popup', {
+                        title: 'Modification agence',
+                        width: '800',
+                        height: '400',
+                    }).showModal();
+                    $('#custom-popup').removeClass('hide');
+
+            })
+
+            if (window.location.href.includes('/civicrm/verifie-agence-liste')) {
+                let contactId = window.location.href.split('?id=')[1].split('&token')[0];
+                $('.id_contact_hidden').val(contactId)
+            }
+
             const urlParams = new URLSearchParams(window.location.search);
             // Get a specific parameter by name.
             let  getCid = urlParams.get('cid');
-            if (getCid) {
-                getCid = getCid.split('?')[0]
+            if (window.location.href.includes('/formulaire-pour-adherent/confirmation')) {
                 if (window.location.href.includes('formulaire-pour-adherent')) {
-                    console.log('ajax loaded')
                     $.ajax({
                         url: '/form/formulaire-pour-adherent/confirmation/back_link',
-                        data: {id: getCid},
                         success: (successResult, val, ee) => {
-                            console.log('successs', successResult)
-                            $('.webform-confirmation__back a').attr('href', successResult)
+                            console.log('back link ', successResult.back_link, 'verifyyy' , successResult.verify_agence, ' btn' , successResult.btn_verify)
+                            $('.webform-confirmation__back a').attr('href', successResult.back_link)
+                            if(!$('.button.btn-blue').length) {
+                                // $(successResult.btn_verify).insertBefore('.webform-confirmation__back');
+                                $(successResult.verify_agence).insertBefore('.webform-confirmation__back');
+                            }
                             
                         },
                         error: function(error) {
@@ -25,7 +77,95 @@
                     
                 }
             }
+
+
+            
+            $('body').on('click', '.page-civicrm-verifie-agence-liste .btn.btn-xs.btn-warning', function () {
+                event.preventDefault();
+                return false;
+                Drupal.dialog('#custom-popup', {
+                    title: 'Modification agence',
+                    width: '600',
+                    height: '400',
+                }).showModal();
+                $('#custom-popup').removeClass('hide');
+            });
         })
+                console.log('firieing', $('.page-civicrm-verifie-agence-liste .btn.btn-xs.btn-warning').length)
+
+        //Document ready
+        $(document).ready(function() {
+            let allParams = new URLSearchParams(window.location.search);
+            let  getCid = allParams.get('cid');
+            //Form adherent, on click sur le btn valider sans modif
+            $('.valid-without-modif').once('leaflet').on('click', function () {
+                $.ajax({
+                    url: '/form/formulaire-pour-adherent/validate-without-modification',
+                    type: "POST",
+                    data: {getCid: getCid},
+                    success: (successValue, val) => {
+                        if(successValue) {
+                            location.href = successValue   
+                        }
+                    },
+                    error: function(error) {
+                        console.log(error, 'ERROR')
+                    }
+                });
+            })
+
+            //Redirect page liste des agence si ce n'est pas le bon id dans l'url
+            let url = window.location.href;
+            // Create a URL object to parse the URL
+            let urlObject = new URL(url);
+
+            // Get the value of the "id" parameter from the query string
+            let fragmentId = urlObject.hash.substr(1); // Remove the "#" symbol
+            let fragmentParams = new URLSearchParams(fragmentId);
+            let getContactId = fragmentParams.get("id");
+            let token = fragmentParams.get('token');
+            $('.page-list-agence').attr('data-contact-id', getContactId)
+
+            if (url.indexOf("/civicrm/verifie-agence-liste") !== -1) {
+                if (token) {
+
+                    $.ajax({
+                        url: '/civicrm/verifie-agence-liste/checkToken',
+                        type: "POST",
+                        data: {token: token},
+                        success: (successResult, val, ee) => {
+                            console.log(successResult, successResult.cid, ' SUCC')
+                            if (!successResult.cid) {//on n'a pas le bon token on redirige à la page d'accueil
+                                location.href= "/";
+                            }
+                        },
+                        error: function(error) {
+                            console.log(error, 'ERROR PARSING TOKEN AJAX')
+                        }
+                    });
+                }else {
+                    location.href= "/";
+                }
+            }
+
+            jQuery('.marque-select.form-select').on('change', function () {
+              var selectedOptions = jQuery(this).find('option:selected');
+              
+              // Initialize an array to store the labels.
+              var labels = [];
+          
+              // Loop through the selected option elements and get their labels.
+              selectedOptions.each(function () {
+                  labels.push(jQuery(this).text());
+              });
+              
+              CKEDITOR.instances['edit-civicrm-2-activity-1-activity-details-value'
+].setData(labels);
+                jQuery('.civicrm-enabled.form-textarea').val(labels);
+
+          });
+        });
       }
+
     }
 })(jQuery, Drupal, drupalSettings);    
