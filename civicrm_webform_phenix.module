@@ -93,7 +93,13 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
   // $webform_submission->setDataValue('field_name', 'new value');
   
  $webform = $webform_submission->getWebform();
+ if ($webform_submission->getData()['civicrm_1_activity_1_activity_activity_type_id'] == 60) {
+  // return;
+  // dump($webform_submission);
+  $webform_submission->delete();
+}
   $custom_service = \Drupal::service('civicrm_webform_phenix.webform');
+
   if ($webform->id() == 'formulaire_pour_adherent') {
     $datas = $webform_submission->getData();
     $descriptif = $datas['civicrm_1_contact_1_custom_50_7584'];
@@ -305,6 +311,8 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
     // $url = "/form/formulaire-pour-adherent?cid=21293%3F3FaddressId%3D10449&token=a84776365a064acdf5e14fda7d4fc3c301e2b872b883462e733907d3da4779a9";
     // $response = new \Symfony\Component\HttpFoundation\RedirectResponse($url);
     // return $response->send();
+
+    
     $custom_service->redirectAfterSubmit();
   }
   

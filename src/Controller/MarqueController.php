@@ -42,30 +42,30 @@ class MarqueController extends ControllerBase
         }
       }
     }
-
+    
 
     /* return [
-        // 3984 => 'EUROFOR',
+      // 3984 => 'EUROFOR',
         3985 => 'KRAMER'
-      ]
-      ; */
-
-// Load a webform by its ID.
-
-   /* $ request = \Drupal::request();
-    $custom_service = \Drupal::service('civicrm_webform_phenix.view_services');
-    $subFamilys = $custom_service->sousFamille();
-    $sorted = asort($subFamilys);
-
-    $input = $request->query->get('q');
-    foreach ($subFamilys as $key => $subFamily) {
-       if (stripos($subFamily, $input) !== false) {
-        $results[] = [
-          'value' => $subFamily . '(' . $key . ')',
-          'label' => $subFamily,
-          'data-val' => $key,
-        ];
-       }
+        ]
+        ; */
+        
+        // Load a webform by its ID.
+        
+        /* $ request = \Drupal::request();
+        $custom_service = \Drupal::service('civicrm_webform_phenix.view_services');
+        $subFamilys = $custom_service->sousFamille();
+        $sorted = asort($subFamilys);
+        
+        $input = $request->query->get('q');
+        foreach ($subFamilys as $key => $subFamily) {
+          if (stripos($subFamily, $input) !== false) {
+            $results[] = [
+              'value' => $subFamily . '(' . $key . ')',
+              'label' => $subFamily,
+              'data-val' => $key,
+            ];
+          }
     } */
 
 
@@ -73,16 +73,19 @@ class MarqueController extends ControllerBase
     return new JsonResponse($results);
   }
 
-
+  
   public function backToForm() {
     $req = \Drupal::request();
     $getId = $req->query->get('id');
+    $custom_service = \Drupal::service('civicrm_webform_phenix.webform');
     $getId = $getId ? $getId : \Drupal::service('session')->get('current_contact_id');
     $custom_service = \Drupal::service('civicrm_webform_phenix.webform');
     $cryptedId = $custom_service->encryptString($getId);
     $addressId = $custom_service->getAddressID($getId);
+
+    $hashContactViaDatabase = $custom_service->checkIfHashContactIsGood($getId);
     
-    $urlBackLink = '/form/formulaire-pour-adherent?cid=' . $getId . '?3FaddressId=' . $addressId . '&token=' . $cryptedId;
+    $urlBackLink = '/form/formulaire-pour-adherent?cid=' . $getId . '&token=' . $hashContactViaDatabase;
 
     $urlVerifyAgence = '<a href="/civicrm/verifie-agence-liste#?id=' . $getId . '&token=' . $cryptedId . '" class="button btn-blue">Vérifier les agences</a>';
     $html_verify = '<div class="verify-agence"><p class="see-all-agence">vos informations sont enregistrées. Merci de bien vouloir vérifier la liste de vos agences.</p>  ' . $urlVerifyAgence . '   </div>';

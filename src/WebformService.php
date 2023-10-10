@@ -24,6 +24,14 @@ class WebformService {
     $this->currentUser = $currentUser;
   }
 
+
+  public function checkIfHashContactIsGood($cid) {
+    return \Civi\Api4\Contact::get(TRUE)
+    ->addSelect('hash')
+    ->addWhere('id', '=', $cid)
+    ->execute()->first()['hash'];
+  }
+
   /**
    * Recupere les données d'un contact à partir du cid
    */
@@ -34,9 +42,12 @@ class WebformService {
       $cid = explode('?', $cid);
       $cid = $cid[0];
     }
+
+    $checksumViaDatabase = $this->checkIfHashContactIsGood($cid);
+    
     $token = $req->get('token');
 
-    if ($cid != $this->decryptString($token)) {
+    if ($token != $checksumViaDatabase) {//check si c'est le bon contact id
       return $this->redirectHomePage();
     }
     $contactInfo = \Civi\Api4\Contact::get(FALSE)
