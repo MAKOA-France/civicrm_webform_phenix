@@ -150,7 +150,23 @@ fieldset.famille_location_field {
     justify-content: space-between;
     align-items: center;
 }
+.page-civicrm-verifie-agence-liste .block-menu.menu--guide .menu li a{
+    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color emoji;
+    color: #707070;
+    font-weight: bold;
+    font-size: 100%;
+    display: flex;
+    padding: 8px 15px;
+    align-items: center;
+    text-transform: capitalize;
+}
 
+.page-civicrm-verifie-agence-liste #content{
+    width: 100%;
+}
+.page-civicrm-verifie-agence-liste #sidebar_left {
+    display: none;
+}
 .webform-submission-formulaire-pour-adherent-form .js-text-format-wrapper .js-filter-wrapper {
     display: none;
 }
@@ -345,6 +361,8 @@ fieldset.famille_location_field {
     padding: 8px 15px;
     align-items: center;
     text-transform: capitalize;
+    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color emoji;
+    font-size: 16px;
   }
   
   .page-form-formulaire-pour-adherent  header .top-bar {

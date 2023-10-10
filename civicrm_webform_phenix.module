@@ -10,7 +10,10 @@ function civicrm_webform_phenix_form_alter (&$form, \Drupal\Core\Form\FormStateI
     $request = \Drupal::request();
     $contactid = $request->query->get('cid');
     $token = $request->get('token');
-    if ($contactid != $custom_service->decryptString($token)) {
+
+    $checksumViaDatabase = $custom_service->checkIfHashContactIsGood($contactid);
+
+    if ($contactid != $checksumViaDatabase) {
       return $custom_service->redirectHomePage();
     }                                               //end vérification hint
 

@@ -40,6 +40,8 @@ class EditAgenceController extends ControllerBase
     ->addWhere('contact_id', '=', $agencdId)
     ->execute()->first()['email'];
 
+
+
     $contactName = \Civi\Api4\Contact::get(FALSE)
       ->addSelect('display_name')
       ->addWhere('id', '=', $agencdId)

@@ -125,7 +125,6 @@ class EditAgenceForm extends FormBase {
     $allAdress['city'] = $city;  
     $allAdress['country'] = $country;  
     // $custom_service->createActivity($this->getCid(), $activite_subject, $all_activity);
-
     $this->updateAdress($allAdress, $current_agence_id);
     $this->updateMail($email, $current_agence_id);
     // $cidCreated = $this->getCreatedContactId($agenceName);
@@ -151,10 +150,25 @@ class EditAgenceForm extends FormBase {
 
 
   private function updateMail($email, $cid) {
-    $results = \Civi\Api4\Email::update(FALSE)
+
+    $emails = \Civi\Api4\Email::get(FALSE)
+    ->addSelect('email')
+    ->addWhere('contact_id', '=', $cid)
+    ->execute()->first()['email'];
+
+    if ($emails) {
+      return \Civi\Api4\Email::update(FALSE)
       ->addValue('email', $email)
+      ->addValue('is_primary', TRUE)
       ->addWhere('contact_id', '=', $cid)
       ->execute();
+    }
+    
+    return \Civi\Api4\Email::create(FALSE)
+    ->addValue('contact_id', $cid)
+    ->addValue('email', $email)
+    ->addValue('is_primary', TRUE)
+    ->execute();
   }
   
   private function getCid () {

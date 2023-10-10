@@ -47,9 +47,13 @@ class WebformService {
     
     $token = $req->get('token');
 
-    if ($token != $checksumViaDatabase) {//check si c'est le bon contact id
-      return $this->redirectHomePage();
+    if ($token != $checksumViaDatabase) {//check si c'est le bon contact id TODO REMETTRE çA pOUR LA PROD
+      return $this->redirectHomePage();  
     }
+    
+    // if ($cid != $this->decryptString($token)) {
+    //     // return $this->redirectHomePage();  
+    // }
     $contactInfo = \Civi\Api4\Contact::get(FALSE)
     ->addSelect('organization_name', 'org_dlr.descriptif_entreprise', 'address_primary.street_address', 'org_dlr.activiteprincipale',
     'address_primary.postal_code', 'address_primary.city', 'address_primary.country_id:label', 'email_primary.email', 'phone_primary.phone')

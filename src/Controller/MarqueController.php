@@ -85,7 +85,8 @@ class MarqueController extends ControllerBase
 
     $hashContactViaDatabase = $custom_service->checkIfHashContactIsGood($getId);
     
-    $urlBackLink = '/form/formulaire-pour-adherent?cid=' . $getId . '&token=' . $hashContactViaDatabase;
+    $urlBackLink = '/form/formulaire-pour-adherent?cid=' . $getId . '?&token=' . $hashContactViaDatabase;
+
 
     $urlVerifyAgence = '<a href="/civicrm/verifie-agence-liste#?id=' . $getId . '&token=' . $cryptedId . '" class="button btn-blue">Vérifier les agences</a>';
     $html_verify = '<div class="verify-agence"><p class="see-all-agence">vos informations sont enregistrées. Merci de bien vouloir vérifier la liste de vos agences.</p>  ' . $urlVerifyAgence . '   </div>';

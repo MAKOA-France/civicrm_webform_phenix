@@ -24,9 +24,10 @@
                     let address = successResult.address;
                     let mail = successResult.mail;
                     let name = successResult.name;
+                    console.log('valeur : ', successResult)
                     $('[name="name_agence"]').val(name);
                     $('[name="email_agence"]').val(mail);
-                    $('[name="street_agence"]').val(address.street_address);
+                    $('[name="street_agence"]').val(address ? address.street_address : '');
                     $('[name="postal_code_agence"]').val(address.postal_code);
                     $('[name="city_agence"]').val(address.city);
                     $('[name="city_agence"]').val(address.city);
