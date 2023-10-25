@@ -59,7 +59,6 @@ fieldset.famille_location_field {
 .btn-blue {
     background: #0071b8 !important;
     float: right;
-    margin-top: 28px !important;
 }
 
 .page-form-formulaire-pour-adherent .form-actions.form-wrapper {
@@ -149,6 +148,12 @@ fieldset.famille_location_field {
     align-content: center;
     justify-content: space-between;
     align-items: center;
+}
+.page-form-formulaire-pour-adherent .top-bar {
+    display: none !important;
+}
+.page-form-formulaire-pour-adherent-confirmation .webform-confirmation__message, .page-form-formulaire-pour-adherent-confirmation .webform-confirmation__back  {
+    display: none;
 }
 .page-civicrm-verifie-agence-liste .block-menu.menu--guide .menu li a{
     font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color emoji;
