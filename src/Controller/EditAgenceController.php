@@ -40,6 +40,10 @@ class EditAgenceController extends ControllerBase
     ->addWhere('contact_id', '=', $agencdId)
     ->execute()->first()['email'];
 
+    $phones = \Civi\Api4\Phone::get(FALSE)
+      ->addSelect('phone')
+      ->addWhere('contact_id', '=', $agencdId)
+      ->execute()->first()['phone'];
 
 
     $contactName = \Civi\Api4\Contact::get(FALSE)
@@ -48,16 +52,18 @@ class EditAgenceController extends ControllerBase
       ->execute()->first()['display_name'];
 
 
-    return new JsonResponse(['address' => $addresses, 'mail' => $emails, 'name' => $contactName]);
+    return new JsonResponse(['address' => $addresses, 'mail' => $emails, 'name' => $contactName, 'phone' => $phones]);
   }
 
   public function checkToken () {
     $custom_service = \Drupal::service('civicrm_webform_phenix.webform');
     $req = \Drupal::request();
     $getToken = $req->request->get('token');
-    $decryptedToken = $custom_service->decryptString($getToken);
-    if ($decryptedToken) {
-      return new JsonResponse(['cid' => $decryptedToken]);
+    $cid = $req->request->get('cid');
+    \Drupal::service('civicrm')->initialize();
+    $isChecksumValid = $custom_service->CustomizeValidateChecksum($cid, $getToken);
+    if ($isChecksumValid) {
+      return new JsonResponse(['cid' => $isChecksumValid]);
     }
     return new JsonResponse([]);
   }
