@@ -80,17 +80,16 @@ class MarqueController extends ControllerBase
     $custom_service = \Drupal::service('civicrm_webform_phenix.webform');
     $getId = $getId ? $getId : \Drupal::service('session')->get('current_contact_id');
     $custom_service = \Drupal::service('civicrm_webform_phenix.webform');
-    $cryptedId = $custom_service->encryptString($getId);
-    $addressId = $custom_service->getAddressID($getId);
 
-    $hashContactViaDatabase = $custom_service->checkIfHashContactIsGood($getId);
+    // $hashContactViaDatabase = $custom_service->checkIfHashContactIsGood($getId);
     
-    $urlBackLink = '/form/formulaire-pour-adherent?cid=' . $getId . '?&token=' . $hashContactViaDatabase;
+    // $urlBackLink = '/form/formulaire-pour-adherent?cid=' . $getId . '?&token=' . $hashContactViaDatabase;
 
-
-    $urlVerifyAgence = '<a href="/civicrm/verifie-agence-liste#?id=' . $getId . '&token=' . $cryptedId . '" class="button btn-blue">Vérifier les agences</a>';
-    $html_verify = '<div class="verify-agence"><p class="see-all-agence">vos informations sont enregistrées. Merci de bien vouloir vérifier la liste de vos agences.</p>  ' . $urlVerifyAgence . '   </div>';
-    return new JsonResponse(['back_link' => $urlBackLink, 'verify_agence' => $html_verify, 'btn_verify' => $urlVerifyAgence]);
+    \Drupal::service('civicrm')->initialize();
+    $gettedChecksum = $custom_service->getChecksumBiCid($getId);
+    $urlVerifyAgence = '<a href="/civicrm/verifie-agence-liste#?id=' . $getId . '&token=' . $gettedChecksum . '" class="button btn-blue">Vérifier les agences</a>';
+    $html_verify = '<div class="verify-agence"><p class="see-all-agence">Vos informations sont enregistrées. Merci de bien vouloir vérifier la liste de vos agences.</p>  ' . $urlVerifyAgence . '   </div>';
+    return new JsonResponse([/* 'back_link' => $urlBackLink, */ 'verify_agence' => $html_verify, 'btn_verify' => $urlVerifyAgence]);
   }
 
 
