@@ -24,6 +24,39 @@ class WebformService {
     $this->currentUser = $currentUser;
   }
 
+  public function CustomizeValidateChecksum($cid, $getToken) {
+
+    //Utilisation checksum 
+    $checksums = \Civi\Api4\Contact::getChecksum(FALSE)
+    ->setContactId($cid)
+    ->execute()->first()['checksum'];
+
+
+    $isValidChecksum = \Civi\Api4\Contact::validateChecksum(fALSE)
+    ->setContactId($cid)
+    ->setChecksum($getToken)
+    ->execute()->first()['valid'];
+
+
+    return $isValidChecksum;
+  }
+
+  
+  public function getPhonePrimary($cid) {
+    return \Civi\Api4\Phone::get(FALSE)
+    ->addSelect('phone')
+    ->addWhere('contact_id', '=', $cid)
+    ->execute()->first();
+  }
+
+
+  public function getChecksumBiCid ($cid) {
+    //Utilisation checksum 
+    return \Civi\Api4\Contact::getChecksum(FALSE)
+    ->setContactId($cid)
+    ->execute()->first()['checksum'];
+  }
+
 
   public function checkIfHashContactIsGood($cid) {
     return \Civi\Api4\Contact::get(TRUE)
@@ -43,11 +76,11 @@ class WebformService {
       $cid = $cid[0];
     }
 
-    $checksumViaDatabase = $this->checkIfHashContactIsGood($cid);
+    $checksum = $req->get('cs');
+    $isValidateChecksum = $this->CustomizeValidateChecksum($cid, $checksum);
     
-    $token = $req->get('token');
 
-    if ($token != $checksumViaDatabase) {//check si c'est le bon contact id TODO REMETTRE çA pOUR LA PROD
+    if (!$isValidateChecksum) {//check si c'est le bon contact id TODO REMETTRE çA pOUR LA PROD
       return $this->redirectHomePage();  
     }
     
@@ -162,7 +195,7 @@ class WebformService {
     //Nouvelle adresse 
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['adresse']['civicrm_1_activity_1_fieldset_fieldset']['civicrm_1_activity_1_activity_details']['#wrapper_attributes']['class'][] = 'custom-class-wrapper';
 
-    $form['actions']['submit']['#suffix'] = '<div><a class="button  valid-without-modif btn btn-primary" >valider sans rien modifier et vérifier les agences</a></div>';
+    // $form['actions']['submit']['#suffix'] = '<div><a class="button  valid-without-modif btn btn-primary" >valider sans rien modifier et vérifier les agences</a></div>';
     
     $activitePrincipalLabel = $this->getLabelMainActivityById($activitePrincipal)->label;
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_activity_1_cg30_custom_7584']['#prefix'] = '<div class="c-activity-main">
@@ -216,7 +249,7 @@ class WebformService {
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['adresse']['civicrm_1_contact_1_contact_longitude']['#title_display'] = 'invisible';
     //  $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_contact_longitude']['#attributes']['disabled'] = true;
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['nom_entreprise']['#default_value'] = $organizationName;
-    $form['actions']['submit']['#value'] = 'valider et vérifier les agences ';
+    $form['actions']['submit']['#value'] = 'Valider vos modifications et vérifier vos agences ';
 
     $country = $this->getDefaultCountry($cid);
     $countryName = $this->getCountryNameById($country);
@@ -764,10 +797,28 @@ public function updateWebsite ($website, $cid) {
   }
 }
 
+public function updatePhonePrimary ($cid, $phone) {
+  $results = \Civi\Api4\Phone::update(FALSE)
+  ->addValue('phone_numeric', $phone)
+  ->addValue('phone', $phone)
+  ->addWhere('contact_id', '=', $cid)
+  ->execute();
+}
+
+
+public function createPhonePrimary($cid, $phone) {
+  return \Civi\Api4\Phone::create(FALSE)
+  ->addValue('phone', $phone)
+  ->addValue('phone_numeric', $phone)
+  ->addValue('contact_id', $cid)
+  ->addValue('location_type_id', 3)
+  ->execute();
+}
+
 /**
  * Permet de mettre à jour le numero de tel principal
  */
-public function updatePhone ($data_phone, $cid) {
+public function updatePhone ($data_phone, $cid) {die('recea');
   if ($data_phone) {
     $results = false;
     $results = \Civi\Api4\Phone::update(FALSE)
