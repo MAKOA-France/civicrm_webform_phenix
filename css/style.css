@@ -118,11 +118,27 @@ fieldset.famille_location_field {
     display: inline-block;
     margin-right: 2%;
 }
-
+.add-new-agenceform {
+    font-family: "Verdana", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.form-item-civicrm-2-activity-1-new-marque > label {
+    color: #54595f;
+    font-size: 100%;
+    font-weight: bold;
+}
+.form-item-civicrm-2-activity-1-new-marque  {
+    width: 49% !important;
+}
 #custom-popup .d-inlines {
     width: 47%;
 }
-
+#custom-popup {
+    height: 385.656px !important;
+}
+[name="civicrm_2_activity_1_new_marque"] {
+    height: 30.5px !important;
+    border-radius: 9px !important;
+}
 .d-inlines {
     width: 31%;
     display: inline-block;
@@ -151,6 +167,9 @@ fieldset.famille_location_field {
 }
 .page-form-formulaire-pour-adherent .top-bar {
     display: none !important;
+}
+.page-form-formulaire-pour-adherent #edit-adresse summary::marker {
+    content: '';
 }
 .page-form-formulaire-pour-adherent-confirmation .webform-confirmation__message, .page-form-formulaire-pour-adherent-confirmation .webform-confirmation__back  {
     display: none;
