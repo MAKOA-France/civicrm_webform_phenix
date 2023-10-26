@@ -39,6 +39,7 @@ class AddNewAgenceForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     
     $custom_service = \Drupal::service('civicrm_webform_phenix.webform');
+    $form['Title']['#markup'] = '<h1 class="add-new-agenceform">Ajouter une agence</h1>';
     $form['name'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Nom de l\'agence'),
@@ -60,7 +61,6 @@ class AddNewAgenceForm extends FormBase {
     $form['detail']['street'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Rue'),
-      '#required' => TRUE,
       '#wrapper_attributes' => ['class' => ['d-inlines']]
     ];
 
@@ -73,7 +73,6 @@ class AddNewAgenceForm extends FormBase {
     $form['detail']['city'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Ville'),
-      '#required' => TRUE,
       '#wrapper_attributes' => ['class' => ['d-inlines']]
     ];
 
@@ -83,6 +82,12 @@ class AddNewAgenceForm extends FormBase {
       '#options' => $custom_service->allCountries(),
       '#wrapper_attributes' => ['class' => ['d-inlines']],
       '#default_value' => 1076
+    ];
+
+    $form['detail']['phone'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Téléphone'),
+      '#wrapper_attributes' => ['class' => ['d-inlines']],
     ];
 
     $form['contact_id_hidden'] = [
@@ -126,6 +131,8 @@ class AddNewAgenceForm extends FormBase {
     $street = $form_state->getValue('street');
     $city = $form_state->getValue('city');
     $email = $form_state->getValue('email');
+    $phone = $form_state->getValue('phone');
+    $phone = implode(" ", str_split($phone, 2));
     $country = $form_state->getValue('country');
     $postal_code = $form_state->getValue('postal_code');
     $contact_id_hidden = $form_state->getValue('contact_id_hidden');
@@ -139,19 +146,23 @@ class AddNewAgenceForm extends FormBase {
     $all_activity['Agence'] .= ' Rue : ' . $street. '<br>';  
     $all_activity['Agence'] .= ' Ville :  ' . $city. '<br>';  
     $all_activity['Agence'] .= ' Email :  ' . $email. '<br>';  
+    $all_activity['Agence'] .= ' Phone :  ' . $phone. '<br>';  
     // $custom_service->createActivity($this->getCid(), $activite_subject, $all_activity);
 
     $this->createContact($agenceName);
     $cidCreated = $this->getCreatedContactId($agenceName);
     $this->createEmailPrimary($cidCreated, $email);
     $this->createRelationAgenceSiege($cid, $cidCreated);
+    $custom_service->createPhonePrimary($cidCreated, $phone);
     $this->createAdress ($cidCreated, $street, $city, $country, $postal_code);
 
 
     $this->messenger->addMessage("L'agence $agenceName a été bien créée.");
 
+
+    $gettedChecksum = $custom_service->getChecksumBiCid($cid);
     // redirection
-    $url = "/civicrm/verifie-agence-liste#?id=" . $cid . "&token=" . $custom_service->encryptString($cid) . "";
+    $url = "/civicrm/verifie-agence-liste#?id=" . $cid . "&token=" . $gettedChecksum . "";
     $response = new \Symfony\Component\HttpFoundation\RedirectResponse($url);
     return $response->send();
   }
