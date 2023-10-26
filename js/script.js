@@ -24,6 +24,7 @@
                     let address = successResult.address;
                     let mail = successResult.mail;
                     let name = successResult.name;
+                    let phone = successResult.phone;
                     console.log('valeur : ', successResult)
                     $('[name="name_agence"]').val(name);
                     $('[name="email_agence"]').val(mail);
@@ -33,6 +34,7 @@
                     $('[name="city_agence"]').val(address.city);
                     $('[name="country_agence"]').val(address.country_id);
                     $('[name="current_agence_id"]').val(idAgence);
+                    $('[name="phone_agence"]').val(phone);
                     },
                     error: function(error) {
                     console.log(error, 'ERROR')
@@ -99,7 +101,7 @@
             let allParams = new URLSearchParams(window.location.search);
             let  getCid = allParams.get('cid');
             //Form adherent, on click sur le btn valider sans modif
-            $('.valid-without-modif').once('leaflet').on('click', function () {
+          /*   $('.valid-without-modif').once('leaflet').on('click', function () {
                 $.ajax({
                     url: '/form/formulaire-pour-adherent/validate-without-modification',
                     type: "POST",
@@ -113,7 +115,7 @@
                         console.log(error, 'ERROR')
                     }
                 });
-            })
+            }) */
 
             //Redirect page liste des agence si ce n'est pas le bon id dans l'url
             let url = window.location.href;
@@ -124,19 +126,29 @@
             let fragmentId = urlObject.hash.substr(1); // Remove the "#" symbol
             let fragmentParams = new URLSearchParams(fragmentId);
             let getContactId = fragmentParams.get("id");
-            let token = fragmentParams.get('token');
-            $('.page-list-agence').attr('data-contact-id', getContactId)
+            var token = fragmentParams.get('cs');
 
+            if (!token) {
+              var query = window.location.href;
+              console.log(token, 'lo')
+              var vars = query.split('&');
+              if (vars) {
+                 token = vars[1].split('token=')[1];
+
+              }
+            }
+            $('.page-list-agence').attr('data-contact-id', getContactId)
             if (url.indexOf("/civicrm/verifie-agence-liste") !== -1) {
                 if (token) {
 
                     $.ajax({
                         url: '/civicrm/verifie-agence-liste/checkToken',
                         type: "POST",
-                        data: {token: token},
+                        data: {token: token, cid: getContactId},
                         success: (successResult, val, ee) => {
                             console.log(successResult, successResult.cid, ' SUCC')
-                            if (!successResult.cid) {//on n'a pas le bon token on redirige à la page d'accueil
+                            console.log('NOT SUCCESS', successResult)
+                            if (!successResult.cid) {//on n'a pas le bon checksum on redirige à la page d'accueil
                                 location.href= "/";
                             }
                         },
@@ -145,6 +157,7 @@
                         }
                     });
                 }else {
+                  console.log('esle...')
                     location.href= "/";
                 }
             }
@@ -160,11 +173,14 @@
                   labels.push(jQuery(this).text());
               });
               
-              CKEDITOR.instances['edit-civicrm-2-activity-1-activity-details-value'
-].setData(labels);
+              if (CKEDITOR && CKEDITOR.instances['edit-civicrm-2-activity-1-activity-details-value']) {
+                CKEDITOR.instances['edit-civicrm-2-activity-1-activity-details-value'
+                    ].setData(labels);
+
+              }
                 jQuery('.civicrm-enabled.form-textarea').val(labels);
 
-          });
+            });
         });
       }
 
