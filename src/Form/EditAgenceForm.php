@@ -2,6 +2,7 @@
 
 namespace Drupal\civicrm_webform_phenix\Form;
 
+use Drupal\civicrm_webform_phenix\WebformService;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -42,7 +43,8 @@ class EditAgenceForm extends FormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Nom de l\'agence'),
       '#required' => TRUE,
-      '#wrapper_attributes' => ['class' => ['d-inline-50']]
+      '#wrapper_attributes' => ['class' => ['d-inline-50']],
+      '#attributes' => ['readonly'=> 'readonly']
     ];
     $form['email_agence'] = [
       '#type' => 'email',
@@ -50,12 +52,14 @@ class EditAgenceForm extends FormBase {
       '#required' => TRUE,
       '#wrapper_attributes' => ['class' => ['d-inline-50']]
     ];
+
+    
     $form['detail'] = [
       '#type' => 'details',
       '#title' => $this->t('Adresse'),
       '#open'  => True,
     ];
-
+    
     $form['detail']['street_agence'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Rue'),
@@ -84,10 +88,33 @@ class EditAgenceForm extends FormBase {
       '#wrapper_attributes' => ['class' => ['d-inlines']]
     ];
 
+    $cid = \Drupal::service('session')->get('current_contact_id');
+     
+    $form['detail']['phone_agence'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Téléphone'),
+      '#wrapper_attributes' => ['class' => ['d-inlines']],
+    ];
+    
+
     $form['current_agence_id'] = [
       '#type' => 'textfield',
       '#title' => 'agence id',
       '#wrapper_attributes' => ['class' => ['hide']]
+    ];
+
+    \Drupal::service('civicrm')->initialize();
+    $customFields = \Civi\Api4\CustomField::get(FALSE)
+    ->addSelect('label')
+    ->addSelect('name')
+    ->addWhere('id', '=', 203)
+    ->execute()->first();
+
+
+    $form[$customFields['name']] = [
+      '#type' => 'checkbox',
+      '#title' => $customFields['label'],
+      '#wrapper_attributes' => ['class' => [' ']]
     ];
 
     $form['#attributes']['class'] = 'custom-popup hide';
@@ -97,6 +124,9 @@ class EditAgenceForm extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t('Enregistrer'),
     ];
+
+
+  
 
     // $contacts = \Civi\Api4\Contact::get(TRUE)
     // ->addSelect('id', 'contact_type', 'contact_sub_type')
@@ -116,6 +146,9 @@ class EditAgenceForm extends FormBase {
     $city = $form_state->getValue('city_agence');
     $email = $form_state->getValue('email_agence');
     $country = $form_state->getValue('country_agence');
+    $phone_agence = $form_state->getValue('phone_agence');
+    $phone_agence = implode(" ", str_split($phone_agence, 2));
+    $A_supprimer = $form_state->getValue('A_supprimer');
     $current_agence_id = $form_state->getValue('current_agence_id');
     $postal_code_agence = $form_state->getValue('postal_code_agence');
     $cid = \Drupal::service('session')->get('current_contact_id');
@@ -123,7 +156,20 @@ class EditAgenceForm extends FormBase {
     $allAdress['street'] = $street;  
     $allAdress['postal_code'] = $postal_code_agence;  
     $allAdress['city'] = $city;  
-    $allAdress['country'] = $country;  
+    $allAdress['country'] = $country;
+
+
+    //check if phone is already exist
+    $hasPhonePrimary = $custom_service->getPhonePrimary($current_agence_id);
+
+    if ($hasPhonePrimary !== null) {
+      $custom_service->updatePhonePrimary($current_agence_id, $phone_agence);
+    }else {
+      $custom_service->createPhonePrimary($current_agence_id, $phone_agence);
+    }
+    //if not create
+
+
     // $custom_service->createActivity($this->getCid(), $activite_subject, $all_activity);
     $this->updateAdress($allAdress, $current_agence_id);
     $this->updateMail($email, $current_agence_id);
@@ -131,11 +177,35 @@ class EditAgenceForm extends FormBase {
     // $this->createEmailPrimary($cidCreated, $email);
     // $this->createRelationAgenceSiege($cid, $cidCreated);
     // $this->createAdress ($cidCreated, $street, $city, $country);
-
+    if($A_supprimer) {
+      $this->createActivityForDeleteAgence($agenceName, $current_agence_id) ;
+    }
      // redirection
-     $url = "/civicrm/verifie-agence-liste#?id=" . $cid . "&token=" . $custom_service->encryptString($cid) . "";dump($cid);
+    $gettedChecksum = $custom_service->getChecksumBiCid($cid);
+    // redirection
+    $url = "/civicrm/verifie-agence-liste#?id=" . $cid . "&token=" . $gettedChecksum . "";
      $response = new \Symfony\Component\HttpFoundation\RedirectResponse($url);
      return $response->send();
+  }
+
+  /**
+   * Delete agence
+   */
+  private function createActivityForDeleteAgence($agenceName, $current_agence_id) {
+    $custom_service = \Drupal::service('civicrm_webform_phenix.webform');
+    $cid = \Drupal::service('session')->get('current_contact_id');
+    $activite_subject = "Annuaire - Mise à jour par l'adhérent " . $custom_service->getOrganizationName($cid);
+    $html = 'Demande de suppression de l\'agence "' . $agenceName . '" (' . $current_agence_id . ')';
+    return \Civi\Api4\Activity::create(FALSE)
+    ->addValue('activity_type_id', WebformService::ID_TYPE_ACTIVITE_UPDATE_BY_ADHERENT)
+    ->addValue('subject', $activite_subject)
+    ->addValue('assignee_contact_id', [WebformService::ASSIGNEE_TO_UPDATE_BY_ADHERENT])
+    ->addValue('target_contact_id', [
+      $cid,
+      ])
+      ->addValue('details',  $html)
+      ->addValue('source_contact_id', $cid)
+      ->execute();
   }
 
   private function updateAdress ($allAdress, $cid) {
