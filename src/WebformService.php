@@ -403,6 +403,13 @@ public function areMultidimensionalArraysEqual($array1, $array2) {
     return $marqueLabel;
   }
 
+  public function ficheContactAsupprimer ($current_agence_id) {
+    $results = \Civi\Api4\Contact::update(FALSE)
+    ->addValue('org_annuaireenligne.A_supprimer', 1)
+    ->addWhere('id', '=', $current_agence_id)
+    ->execute();
+  }
+
   private function html($rue, $postal,$city, $country, $lat, $lon) {
     return '<div class="our-ebook"><div class="container">
               <div class="row adress-container"><div class="col-6 d-none d-lg-block"> 
