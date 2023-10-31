@@ -100,6 +100,9 @@ fieldset.famille_location_field {
     padding-right: 10px;
     /* float: left; */
 }
+.form-item-email.js-form-item-email {
+    width: 31%;
+}
 
 .webform-submission-formulaire-pour-adherent-form .js-form-item.js-form-type-textfield.form-item-civicrm-1-contact-1-website-url {
     padding-right: 10px;
@@ -133,7 +136,7 @@ fieldset.famille_location_field {
     width: 47%;
 }
 #custom-popup {
-    height: 385.656px !important;
+    height: 445.656px !important;
 }
 [name="civicrm_2_activity_1_new_marque"] {
     height: 30.5px !important;
