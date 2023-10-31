@@ -60,15 +60,18 @@ if (($saisie_par_adherent == 1) && ($saisie_par_adherent != null) && ($saisie_pa
 
 
   //Formulaire pour adhérent 
-  if ($form_id == 'webform_submission_formulaire_pour_adherent_add_form') {
-    $req = \Drupal::request();
+  $req = \Drupal::request();
+  if ($form_id == 'webform_submission_formulaire_pour_adherent_add_form' && $req->get('cs')) {
     $cid1 = $req->query->get('cid1');
+
     $all_datas = $custom_service->getAllDataByCid($form);
     
-      $user = \Drupal::currentUser();
-      if ($user->isAnonymous()) {
-        $form['#access'] = true;
-      }
+      // $user = \Drupal::currentUser();//Ceci ne marche plus une fois qu'on a utilisé le checksum
+      // if ($user->isAnonymous()) {
+      //   $form['#access'] = true;
+      // }
+  }else {
+    //return $custom_service->redirectHomePage();  
   }
 }
 
@@ -97,8 +100,7 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
   
  $webform = $webform_submission->getWebform();
  if ($webform_submission->getData()['civicrm_1_activity_1_activity_activity_type_id'] == 60) {
-  // return;
-  // dump($webform_submission);
+  
   $webform_submission->delete();
 }
   $custom_service = \Drupal::service('civicrm_webform_phenix.webform');
@@ -112,6 +114,7 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
     $data_phone = $datas['civicrm_1_contact_1_phone_phone'];
     $data_website = $datas['civicrm_1_contact_1_website_url'];
     $data_email = $datas['civicrm_1_contact_1_email_email'];
+    $new_marque = $datas['civicrm_2_activity_1_new_marque'];
     $url_video_presentation = $datas['civicrm_1_contact_1_contact_video_presentation'];
     $materiel_location = $datas['civicrm_1_contact_1_nom_location'];
     $default_value_all = json_decode($datas['valeur_par_defaut_des_champ']);
@@ -120,6 +123,11 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
     
     foreach($datas as $key => $data) {
       switch($key) {
+        case 'civicrm_2_activity_1_new_marque':
+          if($new_marque) {
+            $isThereAnyDataSubmited = true;
+          }
+          break;
         case 'civicrm_1_contact_1_phone_phone':
           if($data != $default_value_all->phone) {
             $isThereAnyDataSubmited = true;
@@ -184,19 +192,23 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
        $all_activity['Adresse : '] =  $detail_activite_address;
       }
       
-      $new_marque = $datas['civicrm_2_activity_1_activity_details']['value'];
+      $add_marque = $datas['civicrm_2_activity_1_activity_details']['value'];
       
       $all_marques = $custom_service->getAllMarqueLabel($marques, $default_value_all->marque);
       
     
-    if ($new_marque) {
-      $all_activity['Marque : '] =  $new_marque;
+    if ($add_marque) {
+      $all_activity['Marque : '] =  $add_marque;
     }
 
     if ((!$custom_service->areMultidimensionalArraysEqual($marques, $default_value_all->marque))) {
       $all_activity['Marque : '] =  $all_marques;
     }
     
+    
+    if ($new_marque) {
+      $all_activity['Ajout nouvelle marque : '] =  $new_marque;
+    }
     
     if ($activitePrincipal) {
       $label_main_activity = $custom_service->getLabelMainActivityById($activitePrincipal);
@@ -271,7 +283,7 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
         // $custom_service->updatePhone($data_phone, $cid);
         // $custom_service->updateWebsite($data_website, $cid);
 
-        /* TODO commented cause we don't want to edit marque directly
+        //  TODO commented cause we don't want to edit marque directly
         if ($data_marques) {
           //supprimer les anciennes marques
           $delete_marque = \Civi\Api4\CustomValue::delete('Marques', FALSE)
@@ -281,12 +293,12 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
           
           //ajout nouveau marque lié avec l'entreprise
           foreach ($data_marques as $data_marque) {
-            $add_new_marque = \Civi\Api4\CustomValue::create('Marques', FALSE)
+            $add_other_marque = \Civi\Api4\CustomValue::create('Marques', FALSE)
               ->addValue('nom_Marque', $data_marque)
               ->addValue('entity_id', $cid)
               ->execute();
           }
-        }  */
+        }  
           
         /*          if ($url_video_presentation) {//TODO do not edit directly video presentation
           //ajout video dans media -> video en ligne  https://www.youtube.com/watch?v=73YG0olNXWo
@@ -423,6 +435,3 @@ function civicrm_webform_phenix_theme_suggestions_webform_confirmation_alter(arr
   // dump($variables);
   $suggestions[] = 'webform_confirmation__' . $webform;
 }
-
-
-
