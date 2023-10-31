@@ -38,20 +38,30 @@ class AddNewAgenceForm extends FormBase {
   
   public function buildForm(array $form, FormStateInterface $form_state) {
     
+    $cid = \Drupal::service('session')->get('current_contact_id');
     $custom_service = \Drupal::service('civicrm_webform_phenix.webform');
     $form['Title']['#markup'] = '<h1 class="add-new-agenceform">Ajouter une agence</h1>';
+    
+
+        
+    $default_name = '';
+    
+    $contacts = \Civi\Api4\Contact::get(FALSE)
+    ->addSelect('display_name')
+    ->addWhere('id', '=', $cid)
+    ->execute()->first();
+    
+    $default_name = $contacts ? $contacts['display_name'] : '';
+
     $form['name'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Nom de l\'agence'),
       '#required' => TRUE,
-      '#wrapper_attributes' => ['class' => ['d-inline-50']]
+      '#wrapper_attributes' => ['class' => ['d-inline-50']],
+      '#attributes' => ['readonly'=> 'readonly'],
+      '#value' => $default_name
     ];
-    $form['email'] = [
-      '#type' => 'email',
-      '#title' => $this->t('Email'),
-      '#required' => TRUE,
-      '#wrapper_attributes' => ['class' => ['d-inline-50']]
-    ];
+   
     $form['detail'] = [
       '#type' => 'details',
       '#title' => $this->t('Adresse'),
@@ -88,7 +98,19 @@ class AddNewAgenceForm extends FormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Téléphone'),
       '#wrapper_attributes' => ['class' => ['d-inlines']],
+      '#attributes' => ['maxlength' => 14]
     ];
+
+    $form['detail']['email'] = [
+      '#type' => 'email',
+      '#title' => $this->t('Email'),
+      '#required' => TRUE,
+      '#wrapper_attributes' => ['class' => ['d-inline-50']]
+    ];
+
+    
+
+    \Drupal::service('session')->set('current_contact_id', $cid);
 
     $form['contact_id_hidden'] = [
       '#type' => 'textfield',
@@ -102,7 +124,7 @@ class AddNewAgenceForm extends FormBase {
     $exploded_again = explode('?3FaddressId', $exploded[1]);
     $contact_id = $exploded_again[0];
 
-
+    
     $form['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Enregistrer'),
@@ -112,12 +134,7 @@ class AddNewAgenceForm extends FormBase {
       ],
       
     ];
-    
-    
-    // $contacts = \Civi\Api4\Contact::get(TRUE)
-    // ->addSelect('id', 'contact_type', 'contact_sub_type')
-    // ->addWhere('display_name', '=', 'nnnnn')
-    // ->execute()->first();
+
     // dump(\Drupal::request()->get('extra'));
     return $form;
   }
@@ -149,11 +166,16 @@ class AddNewAgenceForm extends FormBase {
     $all_activity['Agence'] .= ' Phone :  ' . $phone. '<br>';  
     // $custom_service->createActivity($this->getCid(), $activite_subject, $all_activity);
 
-    $this->createContact($agenceName);
-    $cidCreated = $this->getCreatedContactId($agenceName);
+    // $this->createContact($agenceName . ' agence');
+
+    $createdContact = $this->createContact($agenceName);
+    $cidCreated = $createdContact->first()['id'];
+    // $cidCreated = $this->getCreatedContactId($agenceName);
     $this->createEmailPrimary($cidCreated, $email);
     $this->createRelationAgenceSiege($cid, $cidCreated);
-    $custom_service->createPhonePrimary($cidCreated, $phone);
+    if ($phone) {
+      $custom_service->createPhonePrimary($cidCreated, $phone);
+    }
     $this->createAdress ($cidCreated, $street, $city, $country, $postal_code);
 
 
@@ -207,6 +229,7 @@ class AddNewAgenceForm extends FormBase {
       ->addValue('contact_type', 'Organization')
       ->addValue('display_name', $agenceName)
       ->addValue('organization_name', $agenceName)
+      ->addValue('org_annuaireenligne.annuaireenligne_DLR', 1)
       ->addValue('contact_sub_type', [
         'Agence',
       ])
