@@ -38,6 +38,7 @@ class EditAgenceForm extends FormBase {
   }
   
   public function buildForm(array $form, FormStateInterface $form_state) {
+    
     $custom_service = \Drupal::service('civicrm_webform_phenix.webform');
     $form['name_agence'] = [
       '#type' => 'textfield',
@@ -45,12 +46,6 @@ class EditAgenceForm extends FormBase {
       '#required' => TRUE,
       '#wrapper_attributes' => ['class' => ['d-inline-50']],
       '#attributes' => ['readonly'=> 'readonly']
-    ];
-    $form['email_agence'] = [
-      '#type' => 'email',
-      '#title' => $this->t('Email'),
-      '#required' => TRUE,
-      '#wrapper_attributes' => ['class' => ['d-inline-50']]
     ];
 
     
@@ -94,6 +89,14 @@ class EditAgenceForm extends FormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Téléphone'),
       '#wrapper_attributes' => ['class' => ['d-inlines']],
+      '#attributes' => ['maxlength' => 10]
+    ];
+
+    $form['detail']['email_agence'] = [
+      '#type' => 'email',
+      '#title' => $this->t('Email'),
+      '#required' => TRUE,
+      '#wrapper_attributes' => ['class' => ['d-inline-50']]
     ];
     
 
@@ -119,10 +122,18 @@ class EditAgenceForm extends FormBase {
 
     $form['#attributes']['class'] = 'custom-popup hide';
 
+    $form['contact_id_hidden'] = [
+      '#type' => 'textfield',
+      '#title' => 'id contact',
+      '#wrapper_attributes' => ['class' => ['d-inlines hide']],
+      '#attributes' => ['class' => ['id_contact_hidden']]
+    ];
+    
 
     $form['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Enregistrer'),
+      
     ];
 
 
@@ -152,6 +163,9 @@ class EditAgenceForm extends FormBase {
     $current_agence_id = $form_state->getValue('current_agence_id');
     $postal_code_agence = $form_state->getValue('postal_code_agence');
     $cid = \Drupal::service('session')->get('current_contact_id');
+    if (!$cid) {
+      $cid = $form_state->getValue('contact_id_hidden');
+    }
     $activite_subject = "Annuaire - Mise à jour par l'adhérent " . $custom_service->getOrganizationName($cid);
     $allAdress['street'] = $street;  
     $allAdress['postal_code'] = $postal_code_agence;  
@@ -162,10 +176,13 @@ class EditAgenceForm extends FormBase {
     //check if phone is already exist
     $hasPhonePrimary = $custom_service->getPhonePrimary($current_agence_id);
 
-    if ($hasPhonePrimary !== null) {
-      $custom_service->updatePhonePrimary($current_agence_id, $phone_agence);
-    }else {
-      $custom_service->createPhonePrimary($current_agence_id, $phone_agence);
+    if ($phone_agence) {
+
+      if ($hasPhonePrimary !== null) {
+        $custom_service->updatePhonePrimary($current_agence_id, $phone_agence);
+      }else {
+        $custom_service->createPhonePrimary($current_agence_id, $phone_agence);
+      }
     }
     //if not create
 
@@ -179,6 +196,7 @@ class EditAgenceForm extends FormBase {
     // $this->createAdress ($cidCreated, $street, $city, $country);
     if($A_supprimer) {
       $this->createActivityForDeleteAgence($agenceName, $current_agence_id) ;
+      $this->ficheContactAsupprimer ($current_agence_id);
     }
      // redirection
     $gettedChecksum = $custom_service->getChecksumBiCid($cid);
@@ -195,7 +213,11 @@ class EditAgenceForm extends FormBase {
     $custom_service = \Drupal::service('civicrm_webform_phenix.webform');
     $cid = \Drupal::service('session')->get('current_contact_id');
     $activite_subject = "Annuaire - Mise à jour par l'adhérent " . $custom_service->getOrganizationName($cid);
-    $html = 'Demande de suppression de l\'agence "' . $agenceName . '" (' . $current_agence_id . ')';
+    $domain = \Drupal::request()->getSchemeAndHttpHost();
+    $url_fiche_contact = $domain . '/civicrm/contact/view?reset=1&cid=' . $current_agence_id . '&selectedChild=summary';
+    $html = 'Demande de suppression de l\'agence "' . $agenceName . '"  avec comme identifiant : ' . $current_agence_id . ' <br>
+    <a href="' . $url_fiche_contact . '">Voir la fiche contact</a>
+    ';
     return \Civi\Api4\Activity::create(FALSE)
     ->addValue('activity_type_id', WebformService::ID_TYPE_ACTIVITE_UPDATE_BY_ADHERENT)
     ->addValue('subject', $activite_subject)
