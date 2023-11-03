@@ -1217,10 +1217,12 @@ public function allCountries () {
     }
   }
 
-  public function redirectAfterSubmit() {
+  public function redirectAfterSubmit($cid, $checksum) {
     $confirmation_page_link = $this->confirmationPage();
+    $url = '/civicrm/verifie-agence-liste#?id=' . $cid . '&token=' . $checksum;
+
     // Redirigez l'utilisateur vers la page de confirmation avec le token dans l'URL.
-    $response = new \Symfony\Component\HttpFoundation\RedirectResponse($confirmation_page_link);
+    $response = new \Symfony\Component\HttpFoundation\RedirectResponse($url);
     $response->send();
   }
 
