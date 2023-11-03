@@ -132,7 +132,7 @@
               var query = window.location.href;
               console.log(token, 'lo')
               var vars = query.split('&');
-              if (vars) {
+              if (vars && vars[1]) {
                  token = vars[1].split('token=')[1];
 
               }
@@ -150,6 +150,7 @@
                             console.log('NOT SUCCESS', successResult)
                             if (!successResult.cid) {//on n'a pas le bon checksum on redirige à la page d'accueil
                                 location.href= "/";
+                                console.log('no checksum')
                             }
                         },
                         error: function(error) {
