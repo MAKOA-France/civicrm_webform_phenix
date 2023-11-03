@@ -39,8 +39,12 @@ class AddNewAgenceForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     
     $cid = \Drupal::service('session')->get('current_contact_id');
+
+    $isCibleOver30 = $this->cibleIsMoreThan30 ($cid);
+    $textImportCsv = $isCibleOver30 ? '<p>Vous pouvez-aussi nous envoyer un fichier .csv ou .xlsx de vos agences à a.campart@dlr.fr</p>' : '';
     $custom_service = \Drupal::service('civicrm_webform_phenix.webform');
-    $form['Title']['#markup'] = '<h1 class="add-new-agenceform">Ajouter une agence</h1>';
+    $form['Title']['#markup'] = $textImportCsv . ' 
+    <h1 class="add-new-agenceform">Ajouter une agence</h1>';
     
 
         
@@ -98,7 +102,7 @@ class AddNewAgenceForm extends FormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Téléphone'),
       '#wrapper_attributes' => ['class' => ['d-inlines']],
-      '#attributes' => ['maxlength' => 14]
+      '#attributes' => ['maxlength' => 10]
     ];
 
     $form['detail']['email'] = [
@@ -137,6 +141,20 @@ class AddNewAgenceForm extends FormBase {
 
     // dump(\Drupal::request()->get('extra'));
     return $form;
+  }
+
+  private function cibleIsMoreThan30 ($cid) {
+    $isOver30 = false;
+    $totalAgence = \Civi\Api4\Relationship::get(FALSE)
+      ->addSelect('COUNT(contact_id_a) AS count')
+      ->addWhere('contact_id_b', '=', $cid)
+      ->addWhere('relationship_type_id', '=', 32)
+      ->execute()->first()['count'];
+      
+     if ($totalAgence > 10) {
+      $isOver30 = true;
+     } 
+     return $isOver30;
   }
 
   /**
