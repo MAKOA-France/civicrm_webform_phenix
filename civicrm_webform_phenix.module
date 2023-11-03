@@ -326,9 +326,13 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
     // $url = "/form/formulaire-pour-adherent?cid=21293%3F3FaddressId%3D10449&token=a84776365a064acdf5e14fda7d4fc3c301e2b872b883462e733907d3da4779a9";
     // $response = new \Symfony\Component\HttpFoundation\RedirectResponse($url);
     // return $response->send();
-
-    
-    $custom_service->redirectAfterSubmit();
+    $checksum = $req->get('cs');
+    $isValidChecksums = $custom_service->CustomizeValidateChecksum($cid, $checksum);
+    if ($isValidChecksums) {
+      $custom_service->redirectAfterSubmit($cid, $checksum);
+    }else {
+      $custom_service->redirectHomePage();
+    }
   }
   
 
