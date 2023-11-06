@@ -158,7 +158,7 @@ class EditAgenceForm extends FormBase {
     $email = $form_state->getValue('email_agence');
     $country = $form_state->getValue('country_agence');
     $phone_agence = $form_state->getValue('phone_agence');
-    $phone_agence = implode(" ", str_split($phone_agence, 2));
+    // $phone_agence = implode(" ", str_split($phone_agence, 2));
     $A_supprimer = $form_state->getValue('A_supprimer');
     $current_agence_id = $form_state->getValue('current_agence_id');
     $postal_code_agence = $form_state->getValue('postal_code_agence');
