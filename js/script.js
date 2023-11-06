@@ -25,6 +25,7 @@
                     let mail = successResult.mail;
                     let name = successResult.name;
                     let phone = successResult.phone;
+                    console.log(phone, 'h po')
                     console.log('valeur : ', successResult)
                     $('[name="name_agence"]').val(name);
                     $('[name="email_agence"]').val(mail);
@@ -154,7 +155,8 @@
                             }
                         },
                         error: function(error) {
-                            console.log(error, 'ERROR PARSING TOKEN AJAX')
+                            location.href= "/";
+                            // console.log(error, 'ERROR PARSING TOKEN AJAX')
                         }
                     });
                 }else {
