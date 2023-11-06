@@ -88,7 +88,17 @@ class MarqueController extends ControllerBase
     \Drupal::service('civicrm')->initialize();
     $gettedChecksum = $custom_service->getChecksumBiCid($getId);
     $urlVerifyAgence = '<a href="/civicrm/verifie-agence-liste#?id=' . $getId . '&token=' . $gettedChecksum . '" class="button btn-blue">Vérifier les agences</a>';
-    $html_verify = '<div class="verify-agence"><p class="see-all-agence">Vos informations sont enregistrées. Merci de bien vouloir vérifier la liste de vos agences.</p>  ' . $urlVerifyAgence . '   </div>';
+/* 
+
+    \Drupal::service('civicrm')->initialize();
+    $afform = [
+      'server_route' => '/civicrm/verifie-agence-liste', 
+      'is_public' => 1,
+    ];
+    $urlVerifyAgence = \Civi\Afform\Tokens::createUrl($afform, $getId); */
+    $linkVerifyAgence = "<a class='button btn-blue' href='{$urlVerifyAgence}'>Vérifier les agences</a>";
+
+    $html_verify = '<div class="verify-agence"><p class="see-all-agence">Vos informations sont enregistrées. Merci de bien vouloir vérifier la liste de vos agences.</p>  ' . $linkVerifyAgence . '   </div>';
     return new JsonResponse([/* 'back_link' => $urlBackLink, */ 'verify_agence' => $html_verify, 'btn_verify' => $urlVerifyAgence]);
   }
 
