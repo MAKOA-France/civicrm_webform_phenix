@@ -120,9 +120,13 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
     $default_value_all = json_decode($datas['valeur_par_defaut_des_champ']);
     
     $isThereAnyDataSubmited = false;
-    
     foreach($datas as $key => $data) {
       switch($key) {
+        case 'civicrm_1_contact_1_marque':
+          if (!empty(array_diff($default_value_all->marque, $marques)) || !empty(array_diff($marques, $default_value_all->marque))) {
+            $isThereAnyDataSubmited = true;
+          }
+          break;
         case 'civicrm_2_activity_1_new_marque':
           if($new_marque) {
             $isThereAnyDataSubmited = true;
@@ -192,13 +196,13 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
        $all_activity['Adresse : '] =  $detail_activite_address;
       }
       
-      $add_marque = $datas['civicrm_2_activity_1_activity_details']['value'];
+      $add_marque = $datas['civicrm_1_contact_1_marque'];
       
       $all_marques = $custom_service->getAllMarqueLabel($marques, $default_value_all->marque);
       
     
     if ($add_marque) {
-      $all_activity['Marque : '] =  $add_marque;
+      $all_activity['Marque : '] =  $all_marques;
     }
 
     if ((!$custom_service->areMultidimensionalArraysEqual($marques, $default_value_all->marque))) {
