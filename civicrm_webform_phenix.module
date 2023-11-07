@@ -187,13 +187,17 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
      ->addWhere('value', '=', 3)
      ->addWhere('option_group_id', '=', 2)
      ->execute(); */
+
+     $status = 2;
      
      $detail_activite_address = $datas['civicrm_1_activity_1_activity_details']['value'];
      $activite_subject = "Annuaire - Mise à jour par l'adhérent " . $custom_service->getOrganizationName($cid);
      
      //ajout activité 
+     
      if ($detail_activite_address) {
        $all_activity['Adresse : '] =  $detail_activite_address;
+       $status = 1;
       }
       
       $add_marque = $datas['civicrm_1_contact_1_marque'];
@@ -212,6 +216,7 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
     
     if ($new_marque) {
       $all_activity['Ajout nouvelle marque : '] =  $new_marque;
+      $status = 1;
     }
     
     if ($activitePrincipal) {
@@ -244,7 +249,8 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
     if (!$isThereAnyDataSubmited) {
       $all_activity = ['Modification' => 'Validé par l\'adherent sans modification'];
     }
-    $custom_service->createActivity($cid, $activite_subject, $all_activity);
+
+    $custom_service->createActivity($cid, $activite_subject, $all_activity, $status);
     
     //update table descriptif entreprise
     $db = \Drupal::database();
