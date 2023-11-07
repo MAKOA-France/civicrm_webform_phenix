@@ -95,7 +95,22 @@
                 $('#custom-popup').removeClass('hide');
             });
         })
-                console.log('firieing', $('.page-civicrm-verifie-agence-liste .btn.btn-xs.btn-warning').length)
+               
+        
+        let url = window.location.href;
+            // Create a URL object to parse the URL
+            let urlObject = new URL(url);
+
+            // Get the value of the "id" parameter from the query string
+            let fragmentId = urlObject.hash.substr(1); // Remove the "#" symbol
+            let fragmentParams = new URLSearchParams(fragmentId);
+            let getContactId = fragmentParams.get("id");
+            var token = fragmentParams.get('cs');
+            if (url.indexOf("/civicrm/verifie-agence-liste") !== -1) {
+                if (!getContactId) {
+                    location.href= "/";
+                }
+            }
 
         //Document ready
         $(document).ready(function() {
@@ -128,14 +143,17 @@
             let fragmentParams = new URLSearchParams(fragmentId);
             let getContactId = fragmentParams.get("id");
             var token = fragmentParams.get('cs');
+            if (url.indexOf("/civicrm/verifie-agence-liste") !== -1) {
+                if (!getContactId) {
+                    location.href= "/";
+                }
+            }
 
             if (!token) {
               var query = window.location.href;
-              console.log(token, 'lo')
               var vars = query.split('&');
               if (vars && vars[1]) {
                  token = vars[1].split('token=')[1];
-
               }
             }
             $('.page-list-agence').attr('data-contact-id', getContactId)
@@ -184,7 +202,19 @@
                 jQuery('.civicrm-enabled.form-textarea').val(labels);
 
             });
-        });
+
+            $('.page-civicrm-verifie-agence-liste [name="phone_agence"], .page-civicrm-verifie-agence-liste [name="phone"]').on('keyup', function (e) {
+                // Get the current input value
+                var inputValue = $(this).val();
+                
+                // Use a regular expression to remove any non-numeric characters
+                var numericValue = inputValue.replace(/[^0-9 ]/g, '');
+                
+                // Update the input field with the numeric value
+                $(this).val(numericValue);
+              });
+
+        });//End document ready
       }
 
     }
