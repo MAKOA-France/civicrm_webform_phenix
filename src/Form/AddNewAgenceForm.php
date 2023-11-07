@@ -167,7 +167,8 @@ class AddNewAgenceForm extends FormBase {
     $city = $form_state->getValue('city');
     $email = $form_state->getValue('email');
     $phone = $form_state->getValue('phone');
-    // $phone = implode(" ", str_split($phone, 2));
+    $phone = preg_replace('/\s+/', '', $phone);
+    $phone = implode(" ", str_split($phone, 2));
     $country = $form_state->getValue('country');
     $postal_code = $form_state->getValue('postal_code');
     $contact_id_hidden = $form_state->getValue('contact_id_hidden');
