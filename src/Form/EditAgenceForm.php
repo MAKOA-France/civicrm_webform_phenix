@@ -48,7 +48,6 @@ class EditAgenceForm extends FormBase {
       '#attributes' => ['readonly'=> 'readonly']
     ];
 
-    
     $form['detail'] = [
       '#type' => 'details',
       '#title' => $this->t('Adresse'),
@@ -158,7 +157,8 @@ class EditAgenceForm extends FormBase {
     $email = $form_state->getValue('email_agence');
     $country = $form_state->getValue('country_agence');
     $phone_agence = $form_state->getValue('phone_agence');
-    // $phone_agence = implode(" ", str_split($phone_agence, 2));
+    $phone_agence = preg_replace('/\s+/', '', $phone_agence);
+    $phone_agence = implode(" ", str_split($phone_agence, 2));
     $A_supprimer = $form_state->getValue('A_supprimer');
     $current_agence_id = $form_state->getValue('current_agence_id');
     $postal_code_agence = $form_state->getValue('postal_code_agence');
@@ -196,7 +196,7 @@ class EditAgenceForm extends FormBase {
     // $this->createAdress ($cidCreated, $street, $city, $country);
     if($A_supprimer) {
       $this->createActivityForDeleteAgence($agenceName, $current_agence_id) ;
-      $this->ficheContactAsupprimer ($current_agence_id);
+      $custom_service->ficheContactAsupprimer ($current_agence_id);
     }
      // redirection
     $gettedChecksum = $custom_service->getChecksumBiCid($cid);
