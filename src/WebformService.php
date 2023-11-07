@@ -1175,7 +1175,7 @@ public function allCountries () {
   /**
    * Permet de créer une activité
    */
-  public function createActivity ($cid, $subject, $details) {
+  public function createActivity ($cid, $subject, $details, $status) {
     $html = '';
     if ($cid) {
 
@@ -1185,7 +1185,6 @@ public function allCountries () {
           $html .= $valueDetail . '<br>';
         }
       }
-
       
       return \Civi\Api4\Activity::create(FALSE)
       ->addValue('activity_type_id', self::ID_TYPE_ACTIVITE_UPDATE_BY_ADHERENT)
@@ -1194,6 +1193,7 @@ public function allCountries () {
       ->addValue('target_contact_id', [
         $cid,
         ])
+        ->addValue('status_id', $status)
         ->addValue('details',  $html)
         ->addValue('source_contact_id', $cid)
         ->execute();
