@@ -362,6 +362,24 @@ public function areMultidimensionalArraysEqual($array1, $array2) {
     ->execute();
   }
 
+  public function getLabelMaterielLocations ($materiel_location) {
+    $optionValues = \Civi\Api4\OptionValue::get(FALSE)
+      ->addSelect('label')
+      ->addWhere('value', 'IN', $materiel_location)
+      ->addWhere('option_group_id', '=', 106)
+      ->execute()->getIterator();
+      $optionValues = iterator_to_array($optionValues); 
+      $optionValues = array_column($optionValues, 'label');
+
+      $delimiter = ', ';
+      $joinedString = implode($delimiter, $optionValues);
+      
+      // Remove the last comma
+      $joinedString = rtrim($joinedString, $delimiter);
+      
+      return $joinedString;
+  }
+
   /**
    * Recuperation des label d'occasion à partir des ids
    */

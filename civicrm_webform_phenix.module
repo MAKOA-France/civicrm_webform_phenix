@@ -118,12 +118,17 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
     $url_video_presentation = $datas['civicrm_1_contact_1_contact_video_presentation'];
     $materiel_location = $datas['civicrm_1_contact_1_nom_location'];
     $default_value_all = json_decode($datas['valeur_par_defaut_des_champ']);
-    
+
     $isThereAnyDataSubmited = false;
     foreach($datas as $key => $data) {
       switch($key) {
         case 'civicrm_1_contact_1_marque':
           if (!empty(array_diff($default_value_all->marque, $marques)) || !empty(array_diff($marques, $default_value_all->marque))) {
+            $isThereAnyDataSubmited = true;
+          }
+          break;
+        case 'civicrm_1_contact_1_nom_location':
+          if ($materiel_location && ($default_value_all->type_materiel != $materiel_location )) {
             $isThereAnyDataSubmited = true;
           }
           break;
@@ -211,6 +216,11 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
 
     if ((!$custom_service->areMultidimensionalArraysEqual($marques, $default_value_all->marque))) {
       $all_activity['Marque : '] =  $all_marques;
+    }
+    
+    if ($materiel_location && ($default_value_all->type_materiel != $materiel_location )) {
+      $all_materiel_locations = $custom_service->getLabelMaterielLocations ($materiel_location);
+      $all_activity['Type de matériel : '] = $all_materiel_locations;
     }
     
     if ($new_marque) {
