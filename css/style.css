@@ -17,6 +17,9 @@
 .our-ebook > .container .form-item-civicrm-1-activity-1-activity-activity-type-id, .our-ebook > .container .form-item-civicrm-1-activity-1-activity-subject{
     display: none;
 }
+.page-form-formulaire-pour-adherent .messages.messages--status {
+    display: none;
+}
 
 fieldset.famille_location_field {
     top: 19px;
