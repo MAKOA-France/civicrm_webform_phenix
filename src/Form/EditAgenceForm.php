@@ -195,7 +195,7 @@ class EditAgenceForm extends FormBase {
     // $this->createRelationAgenceSiege($cid, $cidCreated);
     // $this->createAdress ($cidCreated, $street, $city, $country);
     if($A_supprimer) {
-      $this->createActivityForDeleteAgence($agenceName, $current_agence_id) ;
+      $this->createActivityForDeleteAgence($agenceName, $current_agence_id, $form_state) ;
       $custom_service->ficheContactAsupprimer ($current_agence_id);
     }
      // redirection
@@ -209,9 +209,12 @@ class EditAgenceForm extends FormBase {
   /**
    * Delete agence
    */
-  private function createActivityForDeleteAgence($agenceName, $current_agence_id) {
+  private function createActivityForDeleteAgence($agenceName, $current_agence_id, $form_state) {
     $custom_service = \Drupal::service('civicrm_webform_phenix.webform');
     $cid = \Drupal::service('session')->get('current_contact_id');
+    if (!$cid) {
+      $cid = $form_state->getValue('contact_id_hidden');
+    }
     $activite_subject = "Annuaire - Mise à jour par l'adhérent " . $custom_service->getOrganizationName($cid);
     $domain = \Drupal::request()->getSchemeAndHttpHost();
     $url_fiche_contact = $domain . '/civicrm/contact/view?reset=1&cid=' . $current_agence_id . '&selectedChild=summary';
