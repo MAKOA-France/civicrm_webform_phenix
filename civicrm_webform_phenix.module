@@ -205,14 +205,13 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
       $all_marques = $custom_service->getAllMarqueLabel($marques, $default_value_all->marque);
       
     
-    if ($add_marque) {
+    if ($add_marque && ($default_value_all->marque != $add_marque)) {
       $all_activity['Marque : '] =  $all_marques;
     }
 
     if ((!$custom_service->areMultidimensionalArraysEqual($marques, $default_value_all->marque))) {
       $all_activity['Marque : '] =  $all_marques;
     }
-    
     
     if ($new_marque) {
       $all_activity['Ajout nouvelle marque : '] =  $new_marque;
