@@ -119,7 +119,10 @@ class EditAgenceForm extends FormBase {
       '#wrapper_attributes' => ['class' => [' ']]
     ];
 
-    $form['#attributes']['class'] = 'custom-popup hide';
+    if ($form['#attributes']) {
+
+      $form['#attributes']['class'][] = 'custom-popup hide';
+    }
 
     $form['contact_id_hidden'] = [
       '#type' => 'textfield',
