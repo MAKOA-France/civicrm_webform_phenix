@@ -9,7 +9,7 @@
 }
 
 .our-ebook > .container > fieldset {
-    width: 75%;
+    width: 97%;
 }
 .our-ebook > .container > fieldset >legend {
     display: none;
@@ -343,6 +343,23 @@ fieldset.famille_location_field {
     }
     
 @media only screen and (max-width: 600px) {
+    .c-activity-main {
+        display: block;
+        gap: 0;
+    }
+    .webform-submission-formulaire-pour-adherent-form .grid-container.na-pages {
+        width: 92%;
+        padding-left: 0;
+    } 
+    .webform-submission-formulaire-pour-adherent-form .js-form-item.form-item.js-form-type-textfield, .webform-submission-formulaire-pour-adherent-form .js-form-item.form-item.js-form-type-select, .webform-submission-formulaire-pour-adherent-form .js-form-item.form-item.js-form-type-email {
+        padding-right: 0;
+    }
+    .webform-submission-formulaire-pour-adherent-form .c-activity-main + .js-text-format-wrapper.js-form-item.form-item {
+        width: 97%;
+    }
+    .page-form-formulaire-pour-adherent details .our-ebook > .container {
+        flex-direction: column;
+    }
     .page-form-formulaire-pour-adherent .grid-x.grid-margin-x.align-middle .medium-4.cell{
         width: 37%;
         margin: 0;
@@ -370,16 +387,22 @@ fieldset.famille_location_field {
     .webform-submission-formulaire-pour-adherent-form .js-form-item.form-item.js-form-type-textfield,
      .webform-submission-formulaire-pour-adherent-form .js-form-item.form-item.js-form-type-select, 
      .webform-submission-formulaire-pour-adherent-form .js-form-item.form-item.js-form-type-email {
-        width: 48%;
+        width: 100% !important;
     }
     .form-item-civicrm-1-contact-1-contact-latitude, .form-item-civicrm-1-contact-1-contact-longitude {
         width: 24% !important;
     }
+    .our-ebook > .container .adress-container {
+        width: 100%;
+    }
     .our-ebook-cont {
-        padding: 35px 0 35px 40px;
+        /* padding: 35px 0 35px 40px; */
     }
     .position-initial.block-civicrm-custom-block img.img-logo-head-annuaire {
         width: 41%;
+    }
+    .page-form-formulaire-pour-adherent .position-initial.block-civicrm-custom-block  img.img-logo-head-annuaire {
+        width: 100%;
     }
 }
 
