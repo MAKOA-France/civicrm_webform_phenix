@@ -203,7 +203,17 @@
 
             });
 
-            $('.page-civicrm-verifie-agence-liste [name="phone_agence"], .page-civicrm-verifie-agence-liste [name="phone"]').on('keyup', function (e) {
+            $('[name="civicrm_1_contact_1_phone_phone"]').on('mouseout', function() {
+                let dataPhone = $(this).val();
+                // Remove whitespace
+                dataPhone = dataPhone.replace(/\s+/g, '');
+
+                // Split the string into pairs of characters
+                dataPhone = dataPhone.match(/.{1,2}/g).join(" ");
+                $(this).val(dataPhone);
+            })
+
+            $('.page-civicrm-verifie-agence-liste [name="phone_agence"], .page-civicrm-verifie-agence-liste [name="phone"],[name="civicrm_1_contact_1_phone_phone"]').on('keyup', function (e) {
                 // Get the current input value
                 var inputValue = $(this).val();
                 
