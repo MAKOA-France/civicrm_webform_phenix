@@ -88,13 +88,14 @@ class EditAgenceForm extends FormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Téléphone'),
       '#wrapper_attributes' => ['class' => ['d-inlines']],
-      '#attributes' => ['maxlength' => 10]
+      '#attributes' => ['maxlength' => 10],
+      '#required' => false,
     ];
 
     $form['detail']['email_agence'] = [
       '#type' => 'email',
       '#title' => $this->t('Email'),
-      '#required' => TRUE,
+      '#required' => false,
       '#wrapper_attributes' => ['class' => ['d-inline-50']]
     ];
     

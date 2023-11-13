@@ -41,7 +41,8 @@ class AddNewAgenceForm extends FormBase {
     $cid = \Drupal::service('session')->get('current_contact_id');
 
     $isCibleOver30 = $this->cibleIsMoreThan30 ($cid);
-    $textImportCsv = $isCibleOver30 ? '<p>Vous pouvez-aussi nous envoyer un fichier .csv ou .xlsx de vos agences à a.campart@dlr.fr</p>' : '';
+    $link = '<a href="mailto:a.campart@dlr.fr"><i class="icon-custom-mail-box"></i>a.campart@dlr.fr</a>';
+    $textImportCsv = $isCibleOver30 ? '<p>Vous pouvez-aussi nous envoyer un fichier .csv ou .xlsx de vos agences à ' . $link . '</p>' : '';
     $custom_service = \Drupal::service('civicrm_webform_phenix.webform');
     $form['Title']['#markup'] = $textImportCsv . ' 
     <h1 class="add-new-agenceform">Ajouter une agence</h1>';
@@ -102,13 +103,14 @@ class AddNewAgenceForm extends FormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Téléphone'),
       '#wrapper_attributes' => ['class' => ['d-inlines']],
-      '#attributes' => ['maxlength' => 10]
+      '#attributes' => ['maxlength' => 10],
+      '#required' => false,
     ];
 
     $form['detail']['email'] = [
       '#type' => 'email',
       '#title' => $this->t('Email'),
-      '#required' => TRUE,
+      '#required' => false,
       '#wrapper_attributes' => ['class' => ['d-inline-50']]
     ];
 
@@ -131,7 +133,7 @@ class AddNewAgenceForm extends FormBase {
     
     $form['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Enregistrer'),
+      '#value' => $this->t('Enregistrer la nouvelle agence'),
       '#attributes' => [
         'data-contact-id' => $contact_id,
         'class' => ['page-list-agence']
@@ -190,7 +192,9 @@ class AddNewAgenceForm extends FormBase {
     $createdContact = $this->createContact($agenceName);
     $cidCreated = $createdContact->first()['id'];
     // $cidCreated = $this->getCreatedContactId($agenceName);
-    $this->createEmailPrimary($cidCreated, $email);
+    if ($email) {
+      $this->createEmailPrimary($cidCreated, $email);
+    }
     $this->createRelationAgenceSiege($cid, $cidCreated);
     if ($phone) {
       $custom_service->createPhonePrimary($cidCreated, $phone);
