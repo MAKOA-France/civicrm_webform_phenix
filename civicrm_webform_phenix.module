@@ -118,7 +118,9 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
     $url_video_presentation = $datas['civicrm_1_contact_1_contact_video_presentation'];
     $materiel_location = $datas['civicrm_1_contact_1_nom_location'];
     $default_value_all = json_decode($datas['valeur_par_defaut_des_champ']);
-
+    $data_phone = preg_replace('/\s+/', '', $data_phone);
+    $data_phone = implode(" ", str_split($data_phone, 2));
+    $datas['civicrm_1_contact_1_phone_phone'] = $data_phone;
     $isThereAnyDataSubmited = false;
     foreach($datas as $key => $data) {
       switch($key) {
@@ -201,7 +203,7 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
      //ajout activité 
      
      if ($detail_activite_address) {
-       $all_activity['Adresse : '] =  $detail_activite_address;
+       $all_activity['<b>Adresse : <b>'] =  $detail_activite_address;
        $status = 1;
       }
       
@@ -224,7 +226,7 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
     }
     
     if ($new_marque) {
-      $all_activity['Ajout nouvelle marque : '] =  $new_marque;
+      $all_activity['<b>Ajout nouvelle marque : </b>'] =  $new_marque;
       $status = 1;
     }
     
@@ -270,7 +272,7 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
       
       $results = \Civi\Api4\Contact::update(FALSE)
         ->addValue('org_dlr.descriptif_entreprise', $descriptif)
-        // ->addValue('org_dlr.activiteprincipale', $activitePrincipal)  //Ne Modifie pas directement l'activité pple
+        ->addValue('org_dlr.activiteprincipale', $activitePrincipal)  //Ne Modifie pas directement l'activité pple
         ->addWhere('id', '=', $cid)
         ->execute(); 
 
@@ -297,6 +299,8 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
         }else {// si aucun materiel location n'est selectionné
              $custom_service->updateLocationNewSetNull ($cid, $materiel_location);
         } 
+        
+        // dump($datas);die;
 
         // $custom_service->updateMail($data_email, $cid);
         // $custom_service->updatePhone($data_phone, $cid);
@@ -319,7 +323,7 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
           }
         }  
           
-        /*          if ($url_video_presentation) {//TODO do not edit directly video presentation
+                  if ($url_video_presentation) {//TODO do not edit directly video presentation
           //ajout video dans media -> video en ligne  https://www.youtube.com/watch?v=73YG0olNXWo
           $query = "select field_media_oembed_video_value from media__field_media_oembed_video  where field_media_oembed_video_value = '" . $url_video_presentation . " '" ;
           $existing_video = $db->query($query)->fetch();
@@ -339,7 +343,7 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
           }
         }else {//delete url video linked with cid
           $custom_service->deleteVideoLinkedWithCid($cid);
-        }  */
+        }  
     } 
 
     // $url = "/form/formulaire-pour-adherent?cid=21293%3F3FaddressId%3D10449&token=a84776365a064acdf5e14fda7d4fc3c301e2b872b883462e733907d3da4779a9";
@@ -348,7 +352,13 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
     $checksum = $req->get('cs');
     $isValidChecksums = $custom_service->CustomizeValidateChecksum($cid, $checksum);
     if ($isValidChecksums) {
-      $custom_service->redirectAfterSubmit($cid, $checksum);
+      // dump($cid, $checksum, ' normal');die;
+      $url = '/civicrm/verifie-agence-liste#?id=' . $cid . '&token=' . $checksum;
+
+      // Redirigez l'utilisateur vers la page de confirmation avec le token dans l'URL.
+      $response = new \Symfony\Component\HttpFoundation\RedirectResponse($url);
+      $response->send();
+      // $custom_service->redirectAfterSubmit($cid, $checksum);
     }else {
       $custom_service->redirectHomePage();
     }
