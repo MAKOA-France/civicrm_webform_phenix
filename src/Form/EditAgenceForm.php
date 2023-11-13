@@ -75,12 +75,12 @@ class EditAgenceForm extends FormBase {
       '#wrapper_attributes' => ['class' => ['d-inlines']]
     ];
 
-    $form['detail']['country_agence'] = [
+ /*    $form['detail']['country_agence'] = [
       '#type' => 'select',
       '#title' => $this->t('Pays'),
       '#options' => $custom_service->allCountries(),
       '#wrapper_attributes' => ['class' => ['d-inlines']]
-    ];
+    ]; */
 
     $cid = \Drupal::service('session')->get('current_contact_id');
      
@@ -159,7 +159,7 @@ class EditAgenceForm extends FormBase {
     $street = $form_state->getValue('street_agence');
     $city = $form_state->getValue('city_agence');
     $email = $form_state->getValue('email_agence');
-    $country = $form_state->getValue('country_agence');
+    // $country = $form_state->getValue('country_agence');
     $phone_agence = $form_state->getValue('phone_agence');
     $phone_agence = preg_replace('/\s+/', '', $phone_agence);
     $phone_agence = implode(" ", str_split($phone_agence, 2));
@@ -174,7 +174,7 @@ class EditAgenceForm extends FormBase {
     $allAdress['street'] = $street;  
     $allAdress['postal_code'] = $postal_code_agence;  
     $allAdress['city'] = $city;  
-    $allAdress['country'] = $country;
+    // $allAdress['country'] = $country;
 
 
     //check if phone is already exist
@@ -243,7 +243,7 @@ class EditAgenceForm extends FormBase {
     return \Civi\Api4\Address::update(FALSE)
       ->addValue('street_address', $allAdress['street'])
       ->addValue('city', $allAdress['city'])
-      ->addValue('country_id', $allAdress['country'])
+      // ->addValue('country_id', $allAdress['country'])
       ->addValue('postal_code', $allAdress['postal_code'])
       ->addWhere('contact_id', '=', $cid)
       ->execute();
