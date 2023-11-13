@@ -142,6 +142,7 @@ class WebformService {
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_custom_50_7584']['#default_value'] = $descriptifEntreprise;
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_email_email']['#default_value'] = $email;
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_phone_phone']['#default_value'] = $phone;
+    $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_phone_phone']['#attributes']['maxlength'] = 10;
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['nom_entreprise']['#default_value'] = $organizationName;
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['adresse']['civicrm_1_contact_1_address_street_address']['#default_value'] = $stree_address;
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['adresse']['civicrm_1_contact_1_address_street_address']['#attributes']['class'][] = 'hide hidden';
@@ -1236,7 +1237,7 @@ public function allCountries () {
   }
 
   public function redirectAfterSubmit($cid, $checksum) {
-    $confirmation_page_link = $this->confirmationPage();
+    // $confirmation_page_link = $this->confirmationPage();
     $url = '/civicrm/verifie-agence-liste#?id=' . $cid . '&token=' . $checksum;
 
     // Redirigez l'utilisateur vers la page de confirmation avec le token dans l'URL.
