@@ -193,7 +193,9 @@ class EditAgenceForm extends FormBase {
 
     // $custom_service->createActivity($this->getCid(), $activite_subject, $all_activity);
     $this->updateAdress($allAdress, $current_agence_id);
-    $this->updateMail($email, $current_agence_id);
+    if ($email) {
+      $this->updateMail($email, $current_agence_id);
+    }
     // $cidCreated = $this->getCreatedContactId($agenceName);
     // $this->createEmailPrimary($cidCreated, $email);
     // $this->createRelationAgenceSiege($cid, $cidCreated);
