@@ -58,7 +58,8 @@ class EditAgenceForm extends FormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Rue'),
       '#required' => TRUE,
-      '#wrapper_attributes' => ['class' => ['d-inlines']]
+      '#wrapper_attributes' => ['class' => ['d-inlines']],
+      '#attributes' => ['required' => true]
     ];
 
     $form['detail']['postal_code_agence'] = [

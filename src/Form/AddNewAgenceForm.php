@@ -76,19 +76,23 @@ class AddNewAgenceForm extends FormBase {
     $form['detail']['street'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Rue'),
-      '#wrapper_attributes' => ['class' => ['d-inlines']]
+      '#wrapper_attributes' => ['class' => ['d-inlines']],
+      '#required' => TRUE,
+      '#attributes' => ['required' => true]
     ];
 
     $form['detail']['postal_code'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Code postal'),
-      '#wrapper_attributes' => ['class' => ['d-inlines']]
+      '#wrapper_attributes' => ['class' => ['d-inlines']],
+      '#required' => TRUE,
     ];
 
     $form['detail']['city'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Ville'),
-      '#wrapper_attributes' => ['class' => ['d-inlines']]
+      '#wrapper_attributes' => ['class' => ['d-inlines']],
+      '#required' => TRUE,
     ];
 
     $form['detail']['country'] = [
