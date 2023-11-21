@@ -43,7 +43,7 @@ class EditAgenceForm extends FormBase {
     $form['name_agence'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Nom de l\'agence'),
-      '#required' => TRUE,
+      '#required' => false,
       '#wrapper_attributes' => ['class' => ['d-inline-50']],
       '#attributes' => ['readonly'=> 'readonly']
     ];
@@ -57,7 +57,7 @@ class EditAgenceForm extends FormBase {
     $form['detail']['street_agence'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Rue'),
-      '#required' => TRUE,
+      '#required' => false,
       '#wrapper_attributes' => ['class' => ['d-inlines']],
       '#attributes' => ['required' => true]
     ];
@@ -65,14 +65,14 @@ class EditAgenceForm extends FormBase {
     $form['detail']['postal_code_agence'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Code postal'),
-      '#required' => TRUE,
+      '#required' => false,
       '#wrapper_attributes' => ['class' => ['d-inlines']]
     ];
 
     $form['detail']['city_agence'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Ville'),
-      '#required' => TRUE,
+      '#required' => false,
       '#wrapper_attributes' => ['class' => ['d-inlines']]
     ];
 

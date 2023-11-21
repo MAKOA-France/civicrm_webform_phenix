@@ -191,6 +191,10 @@ fieldset.famille_location_field {
     text-transform: capitalize;
 }
 
+.page-civicrm-verifie-agence-liste .af-text {
+    font-weight: bold;
+}
+
 .page-civicrm-verifie-agence-liste #content{
     width: 100%;
 }
