@@ -199,6 +199,7 @@ class WebformService {
     // $form['actions']['submit']['#suffix'] = '<div><a class="button  valid-without-modif btn btn-primary" >valider sans rien modifier et vérifier les agences</a></div>';
     
     $activitePrincipalLabel = $this->getLabelMainActivityById($activitePrincipal)->label;
+    $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_activity_1_cg30_custom_7584']['#attributes']['required'] = true;
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_activity_1_cg30_custom_7584']['#prefix'] = '<div class="c-activity-main">
     <div class="current-activity"><span class="activity-main-label">Activité principale</span><p class="activite-principal-label"> ' . $activitePrincipalLabel . '</p></div>';
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_activity_1_cg30_custom_7584']['#suffix'] = '</div>';
