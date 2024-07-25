@@ -55,12 +55,18 @@ class AddNewAgenceForm extends FormBase {
     ->addSelect('display_name')
     ->addWhere('id', '=', $cid)
     ->execute()->first();
+    if (!$contacts) {
+      $contacts = \Civi\Api4\Contact::get(FALSE)
+        ->addSelect('organization_name')
+        ->addWhere('id', '=', $cid)
+        ->execute()->first();
+    }
     
     $default_name = $contacts ? $contacts['display_name'] : '';
 
     $form['name'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Nom de l\'agence'),
+      '#title' => $this->t('Nom de l\'agencae'),
       '#required' => TRUE,
       '#wrapper_attributes' => ['class' => ['d-inline-50']],
       '#attributes' => ['readonly'=> 'readonly'],
