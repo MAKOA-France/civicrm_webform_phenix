@@ -6,6 +6,27 @@
 
         $(window).on('load',function() {
 
+            if ($('.page-civicrm-verifie-agence-liste').length)  {
+                console.log(' here ')
+                //Recuperer le nom de l'agence
+                let cid =  jQuery('.page-list-agence').attr('data-contact-id');
+                $.ajax({
+                    url: '/civicrm/get-nom-agence',
+                    type: "POST",
+                    data: {cid: cid},
+                    success: (successResult, val, ee) => {
+                        console.log(successResult, successResult.nameCible, ' AVEC')
+                        if (!$('[name="name"]').val()) {
+                            $('[name="name"]').val(successResult.nameCible)
+                        }
+                    },
+                    error: function(error) {
+                       
+                        // console.log(error, 'ERROR PARSING TOKEN AJAX')
+                    }
+                });
+            }
+            
 
             //formulaire adherent 
             let tr = $( 'body').find('.table.table-striped tbody tr');

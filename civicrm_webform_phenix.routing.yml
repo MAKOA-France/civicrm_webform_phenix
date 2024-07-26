@@ -14,6 +14,13 @@ civicrm_webform_phenix.get_back_to_form:
     _title: 'Lien de retour'
   requirements:
     _permission: 'access content'
+civicrm_webform_phenix.get_nom_agence:
+  path: '/civicrm/get-nom-agence'
+  defaults:
+    _controller: '\Drupal\civicrm_webform_phenix\Controller\MarqueController::getNomAgence'
+    _title: 'Formulaire pour adherent - mise à jour agence - recupere le nom de l agence'
+  requirements:
+    _permission: 'access content'
 
 civicrm_webform_phenix.form:
   path: '/verifie-agence-liste'

@@ -102,5 +102,24 @@ class MarqueController extends ControllerBase
     return new JsonResponse([/* 'back_link' => $urlBackLink, */ 'verify_agence' => $html_verify, 'btn_verify' => $urlVerifyAgence]);
   }
 
+  public function getNomAgence () {
+    $req = \Drupal::request();
+    $getId = $req->request->get('cid');  
+    \Drupal::service('civicrm')->initialize();
+    $contacts = \Civi\Api4\Contact::get(FALSE)
+    ->addSelect('display_name')
+    ->addWhere('id', '=', $getId)
+    ->execute()->first();
+    $contacts = $contacts ? $contacts['display_name'] : false;
+    if (!$contacts) {
+      $contacts = \Civi\Api4\Contact::get(FALSE)
+      ->addSelect('organization_name')
+      ->addWhere('id', '=', $getId)
+      ->execute()->first();
+      $contacts = $contacts ? $contacts['organization_name'] : false;
+    }
+
+    return new JsonResponse(['nameCible' => $contacts]);
+  }
 
 }
