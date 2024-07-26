@@ -468,3 +468,30 @@ function civicrm_webform_phenix_theme_suggestions_webform_confirmation_alter(arr
   // dump($variables);
   $suggestions[] = 'webform_confirmation__' . $webform;
 }
+
+/**
+ * Fonction qui  permet de ne modifier les URLs canoniques que pour les pages /annuaire/* en conservant uniquement le paramètre principal.
+ */
+function civicrm_webform_phenix_page_attachments_alter(array &$attachments) {
+  // Get the current path.
+  $current_path = \Drupal::service('path.current')->getPath();
+  // Check if the URL contains '/annuaire'.
+  if (strpos($current_path, '/annuaire') !== FALSE) {
+    // Parcourir les balises meta
+    foreach ($attachments['#attached']['html_head'] as &$attachment) {
+
+      $canonical_url = Drupal\Core\Url::fromRoute('<current>', [], ['absolute' => TRUE])->toString();
+      // Get the current route match.
+      $route_match = \Drupal::routeMatch();
+
+        // Add the canonical link tag.
+        $attachments['#attached']['html_head_link'][] = [
+          [
+            'rel' => 'canonical',
+            'href' => $canonical_url,
+          ],
+          TRUE
+        ];
+    }
+  }
+}
