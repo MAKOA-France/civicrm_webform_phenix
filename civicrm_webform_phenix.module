@@ -261,7 +261,7 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
       $all_activity = ['Modification' => 'Validé par l\'adherent sans modification'];
     }
 
-    // $custom_service->createActivity($cid, $activite_subject, $all_activity, $status);
+    $custom_service->createActivity($cid, $activite_subject, $all_activity, $status);
     
     //update table descriptif entreprise
     $db = \Drupal::database();
