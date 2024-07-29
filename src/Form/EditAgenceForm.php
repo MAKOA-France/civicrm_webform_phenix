@@ -45,7 +45,7 @@ class EditAgenceForm extends FormBase {
       '#title' => $this->t('Nom de l\'agence'),
       '#required' => false,
       '#wrapper_attributes' => ['class' => ['d-inline-50']],
-      '#attributes' => ['readonly'=> 'readonly']
+      // '#attributes' => ['readonly'=> 'readonly']
     ];
 
     $form['detail'] = [
@@ -177,6 +177,8 @@ class EditAgenceForm extends FormBase {
     $allAdress['city'] = $city;  
     // $allAdress['country'] = $country;
 
+    $this->updateOrganizationName($current_agence_id, $agenceName) ;
+
 
     //check if phone is already exist
     $hasPhonePrimary = $custom_service->getPhonePrimary($current_agence_id);
@@ -250,6 +252,14 @@ class EditAgenceForm extends FormBase {
       ->execute();
   }
 
+  private function updateOrganizationName ($cid, $agenceName) {
+    return \Civi\Api4\Contact::update(FALSE)
+    ->addValue('organization_name', $agenceName)
+    ->addValue('legal_name', $agenceName)
+    ->addValue('display_name', $agenceName)
+    ->addWhere('id', '=', $cid)
+    ->execute();
+  }
 
   private function updateMail($email, $cid) {
 

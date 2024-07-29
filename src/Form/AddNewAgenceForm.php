@@ -66,11 +66,11 @@ class AddNewAgenceForm extends FormBase {
 
     $form['name'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Nom de l\'agencae'),
+      '#title' => $this->t('Nom de l\'agence'),
       '#required' => TRUE,
       '#wrapper_attributes' => ['class' => ['d-inline-50']],
-      '#attributes' => ['readonly'=> 'readonly'],
-      '#value' => $default_name
+      // '#attributes' => ['readonly'=> 'readonly'],
+      '#default_value' => $default_name
     ];
    
     $form['detail'] = [
@@ -113,7 +113,7 @@ class AddNewAgenceForm extends FormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Téléphone'),
       '#wrapper_attributes' => ['class' => ['d-inlines']],
-      '#attributes' => ['maxlength' => 10],
+      '#attributes' => ['maxlength' => 10,],
       '#required' => false,
     ];
 
@@ -202,6 +202,7 @@ class AddNewAgenceForm extends FormBase {
     $createdContact = $this->createContact($agenceName);
     $cidCreated = $createdContact->first()['id'];
     // $cidCreated = $this->getCreatedContactId($agenceName);
+    
     if ($email) {
       $this->createEmailPrimary($cidCreated, $email);
     }
@@ -214,6 +215,8 @@ class AddNewAgenceForm extends FormBase {
 
     $this->messenger->addMessage("L'agence $agenceName a été bien créée.");
 
+
+    $this->updateOrganizationName($cidCreated, $agenceName) ;
 
     $gettedChecksum = $custom_service->getChecksumBiCid($cid);
     // redirection
@@ -228,6 +231,16 @@ class AddNewAgenceForm extends FormBase {
     $userEmail = $current_user->getEmail(); // Get the user's ID.
     return  $form['submit']['#attributes']['data-contact-id'];
     
+  }
+
+  
+  private function updateOrganizationName ($cid, $agenceName) {
+    return \Civi\Api4\Contact::update(FALSE)
+    ->addValue('organization_name', $agenceName)
+    ->addValue('legal_name', $agenceName)
+    ->addValue('display_name', $agenceName)
+    ->addWhere('id', '=', $cid)
+    ->execute();
   }
 
   private function createAdress ($cidAgence, $street, $city, $country = 1076, $postal_code) {
