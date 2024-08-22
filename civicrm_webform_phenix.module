@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Permet de griser les champs effectif et le bouton valider si le formulaire a été déjà soumis par un adhérent
@@ -25,7 +25,7 @@ function civicrm_webform_phenix_form_alter (&$form, \Drupal\Core\Form\FormStateI
         ->addSelect('custom_effectif_dsn.effectif')
         ->addJoin('Custom_effectif_dsn AS custom_effectif_dsn', 'LEFT')
         ->addWhere('id', '=', $current_contact)
-        // ->addWhere('custom_effectif_dsn.eff_annee', '=', $current_year . '-01-01')//Condition par année à voir 
+        // ->addWhere('custom_effectif_dsn.eff_annee', '=', $current_year . '-01-01')//Condition par année à voir
         ->execute()->column('custom_effectif_dsn.saisie_adherent')[0];
 
 //si des données ont été déjà soumis pour cette année
@@ -43,35 +43,35 @@ if ($current_contact == 375528787) { //cid 37552 de makoa
      for ($i= 1; $i<15; $i++) {
        $form['elements']['civicrm_' . $i . '_contact_1_cg13_fieldset']['civicrm_' . $i . '_contact_1_cg13_custom_34']['#attributes']['readonly'] = true;
       }
-      
+
       $form['actions']['submit']['#disabled'] = TRUE; //set button disabled
     }
 }
 if (($saisie_par_adherent == 1) && ($saisie_par_adherent != null) && ($saisie_par_adherent !== false)) {
-      
+
         //set field effectif to readonly
         for ($i= 1; $i<15; $i++) {
             $form['elements']['civicrm_' . $i . '_contact_1_cg13_fieldset']['civicrm_' . $i . '_contact_1_cg13_custom_34']['#attributes']['readonly'] = true;
         }
-            
+
         $form['actions']['submit']['#disabled'] = TRUE; //set button disabled
     }
   }
 
 
-  //Formulaire pour adhérent 
+  //Formulaire pour adhérent
   $req = \Drupal::request();
   if ($form_id == 'webform_submission_formulaire_pour_adherent_add_form' && $req->get('cs')) {
     $cid1 = $req->query->get('cid1');
 
     $all_datas = $custom_service->getAllDataByCid($form);
-    
+
       // $user = \Drupal::currentUser();//Ceci ne marche plus une fois qu'on a utilisé le checksum
       // if ($user->isAnonymous()) {
       //   $form['#access'] = true;
       // }
   }else {
-    //return $custom_service->redirectHomePage();  
+    //return $custom_service->redirectHomePage();
   }
 }
 
@@ -97,10 +97,10 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
   // Perform actions or manipulate data before the webform submission is saved.
   // For example, you can access and modify the submission values using:
   // $webform_submission->setDataValue('field_name', 'new value');
-  
+
  $webform = $webform_submission->getWebform();
  if ($webform_submission->getData()['civicrm_1_activity_1_activity_activity_type_id'] == 60) {
-  
+
   $webform_submission->delete();
 }
   $custom_service = \Drupal::service('civicrm_webform_phenix.webform');
@@ -181,14 +181,14 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
           break;
       }
     }
-    
+
     $req = \Drupal::request();
     $cid = $req->query->get('cid');
     if (!is_numeric($cid)) {
       $cid = explode('?', $cid);
       $cid = $cid[0];
     }
-    
+
     /**$optionValues = \Civi\Api4\OptionValue::get(FALSE)
      ->addSelect('label')
      ->addWhere('value', '=', 3)
@@ -196,22 +196,22 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
      ->execute(); */
 
      $status = 2;
-     
+
      $detail_activite_address = $datas['civicrm_1_activity_1_activity_details']['value'];
      $activite_subject = "Annuaire - Mise à jour par l'adhérent " . $custom_service->getOrganizationName($cid);
-     
-     //ajout activité 
-     
+
+     //ajout activité
+
      if ($detail_activite_address) {
        $all_activity['<b>Adresse : <b>'] =  $detail_activite_address;
        $status = 1;
       }
-      
+
       $add_marque = $datas['civicrm_1_contact_1_marque'];
-      
+
       $all_marques = $custom_service->getAllMarqueLabel($marques, $default_value_all->marque);
-      
-    
+
+
     if ($add_marque && ($default_value_all->marque != $add_marque)) {
       $all_activity['Marque : '] =  $all_marques;
     }
@@ -219,17 +219,17 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
     if ((!$custom_service->areMultidimensionalArraysEqual($marques, $default_value_all->marque))) {
       $all_activity['Marque : '] =  $all_marques;
     }
-    
+
     if ($materiel_location && ($default_value_all->type_materiel != $materiel_location )) {
       $all_materiel_locations = $custom_service->getLabelMaterielLocations ($materiel_location);
       $all_activity['Type de matériel : '] = $all_materiel_locations;
     }
-    
+
     if ($new_marque) {
       $all_activity['<b>Ajout nouvelle marque : </b>'] =  $new_marque;
       $status = 1;
     }
-    
+
     if ($activitePrincipal) {
       $label_main_activity = $custom_service->getLabelMainActivityById($activitePrincipal);
       $all_activity['Activité principale : '] =  $label_main_activity->label;
@@ -262,28 +262,28 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
     }
 
     $custom_service->createActivity($cid, $activite_subject, $all_activity, $status);
-    
+
     //update table descriptif entreprise
     $db = \Drupal::database();
-    if ($datas) {  //todo codition 
+    if ($datas) {  //todo codition
       $descriptif = $descriptif['value'];
        $descriptif = Drupal\Core\Render\Markup::create($descriptif);
-      
-      
+
+
       $results = \Civi\Api4\Contact::update(FALSE)
         ->addValue('org_dlr.descriptif_entreprise', $descriptif)
         ->addValue('org_dlr.activiteprincipale', $activitePrincipal)  //Ne Modifie pas directement l'activité pple
         ->addWhere('id', '=', $cid)
-        ->execute(); 
+        ->execute();
 
         $data_marques = $datas['civicrm_1_contact_1_marque'];
         $data_latitude = $datas['civicrm_1_contact_1_contact_latitude'];
         $data_longitude = $datas['civicrm_1_contact_1_contact_longitude'];
-       
+
         //Update matériel occasion
         $custom_service->updateMaterielOccasion ($cid, $materielOccasion);
 
-  
+
         //update materiel location
          if (!empty($materiel_location)) {
 
@@ -298,8 +298,8 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
              $custom_service->updateLocationNew ($cid, $materiel_location);
         }else {// si aucun materiel location n'est selectionné
              $custom_service->updateLocationNewSetNull ($cid, $materiel_location);
-        } 
-        
+        }
+
         // dump($datas);die;
 
         // $custom_service->updateMail($data_email, $cid);
@@ -313,7 +313,7 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
           ->addWhere('entity_id', '=', $cid)
           ->execute();
 
-          
+
           //ajout nouveau marque lié avec l'entreprise
           foreach ($data_marques as $data_marque) {
             $add_other_marque = \Civi\Api4\CustomValue::create('Marques', FALSE)
@@ -321,8 +321,8 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
               ->addValue('entity_id', $cid)
               ->execute();
           }
-        }  
-          
+        }
+
                   if ($url_video_presentation) {//TODO do not edit directly video presentation
           //ajout video dans media -> video en ligne  https://www.youtube.com/watch?v=73YG0olNXWo
           $query = "select field_media_oembed_video_value from media__field_media_oembed_video  where field_media_oembed_video_value = '" . $url_video_presentation . " '" ;
@@ -343,8 +343,8 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
           }
         }else {//delete url video linked with cid
           $custom_service->deleteVideoLinkedWithCid($cid);
-        }  
-    } 
+        }
+    }
 
     // $url = "/form/formulaire-pour-adherent?cid=21293%3F3FaddressId%3D10449&token=a84776365a064acdf5e14fda7d4fc3c301e2b872b883462e733907d3da4779a9";
     // $response = new \Symfony\Component\HttpFoundation\RedirectResponse($url);
@@ -363,20 +363,20 @@ function civicrm_webform_phenix_webform_submission_presave(Drupal\webform\Webfor
       $custom_service->redirectHomePage();
     }
   }
-  
 
- 
+
+
 }
 
 
 /**
  * Implements hook_preprocess_page().
  */
-function civicrm_webform_phenix_preprocess_page(&$variables)
+/* function civicrm_webform_phenix_preprocess_page(&$variables)
 {
   $request = \Drupal::request();
   $variables['#attached']['library'][] = 'civicrm_webform_phenix/civicrm_webform_phenix';
-  
+
   $domain = \Drupal::request()->getHost();
   $currentUrl = \Drupal::request()->getRequestUri();
   if ((strpos($currentUrl, '/annuaire') !== false) && ($domain == 'extranet.dlr.fr')) {
@@ -384,7 +384,7 @@ function civicrm_webform_phenix_preprocess_page(&$variables)
    // $response = new \Symfony\Component\HttpFoundation\RedirectResponse('https://annuairedlr.fr/annuaire/');
    // $response->send();
   }
-}
+} */
 
 use Drupal\Core\Access\AccessResult;
 
@@ -395,11 +395,11 @@ function civicrm_webform_phenix_entity_update(Drupal\Core\Entity\EntityInterface
   // Check if the updated entity is a webform.
   if ($entity instanceof Drupal\civicrm_entity\Entity\CivicrmEntity) {
      return AccessResult::allowed();
-    /* 
+    /*
     $entityType = $entity->getEntityTypeId();
     $entityId = $entity->id();
-    
-    
+
+
     $contactId = 20646;
 
   // Check permissions using the CiviCRM API.
@@ -412,7 +412,7 @@ function civicrm_webform_phenix_entity_update(Drupal\Core\Entity\EntityInterface
 
     // Get the webform's access control handler.
     $accessControlHandler = \Drupal::entityTypeManager()->getAccessControlHandler('civicrm_entity');
-    
+
     // Get the current webform permissions.
     $permissions = $accessControlHandler->buildPermissions($entity);
 
@@ -428,19 +428,19 @@ function civicrm_webform_phenix_entity_update(Drupal\Core\Entity\EntityInterface
 
 
 /**
- * 
+ *
  * Gestion de permission par rapport à l'utilisateur anonyme
- * 
+ *
  * Implements hook_entity_access().
  */
 function civicrm_webform_phenix_entity_access($entity, $operation, $account) {
   // return Drupal\Core\Access\AccessResult::neutral();
   $custom_service = \Drupal::service('civicrm_webform_phenix.webform');
-   
+
    $white_list_entity = $custom_service->whiteList();
   if ($account->isAnonymous()) {
     if (in_array($entity->id(), $white_list_entity))  {
-      if ($operation == 'submission_page') {//n'authoriser aux utilisateurs anonyme que les 
+      if ($operation == 'submission_page') {//n'authoriser aux utilisateurs anonyme que les
         return Drupal\Core\Access\AccessResult::allowed();
       }
       if ($operation != 'view') {
@@ -453,7 +453,7 @@ function civicrm_webform_phenix_entity_access($entity, $operation, $account) {
     }else {
         // return Drupal\Core\Access\AccessResult::forbidden();
     }
-  } 
+  }
 
 }
 
@@ -478,11 +478,58 @@ function civicrm_webform_phenix_page_attachments_alter(array &$attachments) {
   // Check if the URL contains '/annuaire'.
   if (strpos($current_path, '/annuaire') !== FALSE) {
     // Parcourir les balises meta
+
+
+
     foreach ($attachments['#attached']['html_head'] as &$attachment) {
 
       $canonical_url = Drupal\Core\Url::fromRoute('<current>', [], ['absolute' => TRUE])->toString();
       // Get the current route match.
       $route_match = \Drupal::routeMatch();
+
+
+        if (strpos($canonical_url, 'annuaire/location') !== false && (\Drupal::request()->query->get('materiel_location'))) {  //Pour la page location
+          $canonical_url = $canonical_url . '?materiel_location=' . \Drupal::request()->query->get('materiel_location');
+        }
+
+
+        if (strpos($canonical_url, '/annuaire/occasion') !== false) {  //Pour la page vente
+          if(\Drupal::request()->query->get('marque_nom') && !\Drupal::request()->query->get('materiel_occasion')) {
+            $canonical_url = $canonical_url . '?marque_nom=' . \Drupal::request()->query->get('marque_nom');
+          }
+
+          if(\Drupal::request()->query->get('materiel_occasion') && (!\Drupal::request()->query->get('marque_nom') || (\Drupal::request()->query->get('marque_nom') == 'All'))) {
+            $canonical_url = $canonical_url . '?materiel_occasion=' . \Drupal::request()->query->get('materiel_occasion');
+          }
+
+        }
+
+        if (strpos($canonical_url, '/annuaire/grues_a_tour') !== false) {  //Pour la page grues à tour
+          $param = '?';
+         
+          if (\Drupal::request()->query->get('location')) {
+            if (strpos($canonical_url, '?') !== false) {
+              $param = '&';
+            }
+            $canonical_url = $canonical_url . $param . 'location=' . \Drupal::request()->query->get('location');
+          }
+          if (\Drupal::request()->query->get('montage')) {
+            if (strpos($canonical_url, '?') !== false) {
+              $param = '&';
+            }
+            $canonical_url = $canonical_url . $param . 'montage=' . \Drupal::request()->query->get('montage');
+          }
+          if (\Drupal::request()->query->get('reparation')) {
+            if (strpos($canonical_url, '?') !== false) {
+              $param = '&';
+            }
+            $canonical_url = $canonical_url . $param . 'reparation=' . \Drupal::request()->query->get('reparation');
+          }
+        }
+
+
+
+
 
         // Add the canonical link tag.
         $attachments['#attached']['html_head_link'][] = [

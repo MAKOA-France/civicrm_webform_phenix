@@ -26,7 +26,7 @@ class WebformService {
 
   public function CustomizeValidateChecksum($cid, $getToken) {
 
-    //Utilisation checksum 
+    //Utilisation checksum
     $checksums = \Civi\Api4\Contact::getChecksum(FALSE)
     ->setContactId($cid)
     ->execute()->first()['checksum'];
@@ -41,7 +41,7 @@ class WebformService {
     return $isValidChecksum;
   }
 
-  
+
   public function getPhonePrimary($cid) {
     return \Civi\Api4\Phone::get(FALSE)
     ->addSelect('phone')
@@ -51,7 +51,7 @@ class WebformService {
 
 
   public function getChecksumBiCid ($cid) {
-    //Utilisation checksum 
+    //Utilisation checksum
     return \Civi\Api4\Contact::getChecksum(FALSE)
     ->setContactId($cid)
     ->execute()->first()['checksum'];
@@ -78,21 +78,21 @@ class WebformService {
 
     $checksum = $req->get('cs');
     $isValidateChecksum = $this->CustomizeValidateChecksum($cid, $checksum);
-    
+
 
     if (!$isValidateChecksum) {//check si c'est le bon contact id TODO REMETTRE çA pOUR LA PROD
-      return $this->redirectHomePage();  
+      return $this->redirectHomePage();
     }
-    
+
     // if ($cid != $this->decryptString($token)) {
-    //     // return $this->redirectHomePage();  
+    //     // return $this->redirectHomePage();
     // }
     $contactInfo = \Civi\Api4\Contact::get(FALSE)
     ->addSelect('organization_name', 'org_dlr.descriptif_entreprise', 'address_primary.street_address', 'org_dlr.activiteprincipale',
     'address_primary.postal_code', 'address_primary.city', 'address_primary.country_id:label', 'email_primary.email', 'phone_primary.phone')
     ->addWhere('id', '=', $cid)
     ->execute();
-    
+
     $contactInfo = iterator_to_array($contactInfo);
 
     $websites = \Civi\Api4\Website::get(FALSE)
@@ -104,24 +104,24 @@ class WebformService {
       ->addWhere('id', '=', $cid)
       ->execute();
 
-    
+
     $materiel_occasion = \Civi\Api4\Contact::get(FALSE)
       ->addSelect('Materiel.nom_occasion:label')
       ->addWhere('id', '=', $cid)
       ->execute()->first();
 
     //$iterator = iterator_to_array($marquees);
-    $organizationName = ''; 
-    $descriptifEntreprise = ''; 
-    $email = ''; 
-    $phone = ''; 
-    $stree_address = ''; 
-    $postal_code = ''; 
-    $website_url = ''; 
-    $city = ''; 
-    $activitePrincipal = ''; 
-    $latitude = ''; 
-    $longitude = ''; 
+    $organizationName = '';
+    $descriptifEntreprise = '';
+    $email = '';
+    $phone = '';
+    $stree_address = '';
+    $postal_code = '';
+    $website_url = '';
+    $city = '';
+    $activitePrincipal = '';
+    $latitude = '';
+    $longitude = '';
     if ($contactInfo) {
       $organizationName = reset($contactInfo)['organization_name'];
       $organizationName = reset($contactInfo)['organization_name'];
@@ -135,7 +135,7 @@ class WebformService {
       // $markup = ['#markup' => $descriptifEntreprise];
       // $descriptifEntreprise = \Drupal::service('renderer')->render($markup)->__toString();
     }
-    
+
     $website_url = $websites ? $websites[0] : '';
 
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_contact_organization_name']['#default_value'] = $organizationName;
@@ -154,7 +154,7 @@ class WebformService {
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['adresse']['civicrm_1_contact_1_address_city']['#default_value'] = $city;
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['adresse']['civicrm_1_contact_1_address_city']['#attributes']['class'][] = 'hide hidden';
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['adresse']['civicrm_1_contact_1_address_city']['#attributes']['disabled'] = true;
-     
+
     $allActivity = $this->getAllActivitePrincipal();
     $whiteListActivity = [51,52, 54,55,53];
      // Flip the keys in $array2 to create an array with keys from $array2.
@@ -174,11 +174,11 @@ class WebformService {
       $optionActivity[$activity['value']] = $activity['label'];
     }
 
-    //marques 
+    //marques
     $form['elements']['civicrm_2_activity_1_fieldset_fieldset']['#attributes']['class'][] = 'hide hidden';
     $form['elements']['civicrm_2_activity_1_fieldset_fieldset']['civicrm_2_activity_1_activity_subject']['#attributes']['class'][] = 'hide hidden';
-    
-    //Nouvelle adresse sujet d'activité && assigné à 
+
+    //Nouvelle adresse sujet d'activité && assigné à
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['adresse']['civicrm_1_activity_1_fieldset_fieldset']['civicrm_1_activity_1_activity_subject']['#attributes']['class'][] = 'hide hidden';
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['adresse']['civicrm_1_activity_1_fieldset_fieldset']['civicrm_1_activity_1_activity_subject']['#default_value'] = "Demande d'ajout d'une nouvelle adresse";
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['adresse']['civicrm_1_activity_1_fieldset_fieldset']['civicrm_1_activity_1_activity_subject']['#title_display'] = 'invisible';
@@ -191,13 +191,13 @@ class WebformService {
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['adresse']['civicrm_1_activity_1_fieldset_fieldset']['civicrm_1_activity_1_activity_activity_type_id']['#default_value'] = 60; //Question
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['adresse']['civicrm_1_activity_1_fieldset_fieldset']['civicrm_1_activity_1_activity_activity_type_id']['#attributes']['class'][] = 'hide hidden';
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['adresse']['civicrm_1_activity_1_fieldset_fieldset']['civicrm_1_activity_1_activity_activity_type_id']['#title_display'] = 'invisible';
- 
 
-    //Nouvelle adresse 
+
+    //Nouvelle adresse
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['adresse']['civicrm_1_activity_1_fieldset_fieldset']['civicrm_1_activity_1_activity_details']['#wrapper_attributes']['class'][] = 'custom-class-wrapper';
 
     // $form['actions']['submit']['#suffix'] = '<div><a class="button  valid-without-modif btn btn-primary" >valider sans rien modifier et vérifier les agences</a></div>';
-    
+
     $activitePrincipalLabel = $this->getLabelMainActivityById($activitePrincipal)->label;
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_activity_1_cg30_custom_7584']['#attributes']['required'] = true;
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_activity_1_cg30_custom_7584']['#prefix'] = '<div class="c-activity-main">
@@ -221,7 +221,7 @@ class WebformService {
       $defaultMark .= '<li>' . $marqueLabel . '</li>';
     }
     $defaultMark .= '</ul></div>';
-    
+
     // $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_marque']['#prefix'] = $defaultMark;
     $encryptedCid = $this->encryptString($cid);
 
@@ -262,7 +262,7 @@ class WebformService {
     $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_famille_occasion']['#default_value'] = $this->getDefaultValueOccasion($cid);
 
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['adresse']['civicrm_1_contact_1_contact_longitude'][
-      '#suffix'] = $this->html($stree_address, $postal_code, $city,$countryName, $lat, $lon);     
+      '#suffix'] = $this->html($stree_address, $postal_code, $city,$countryName, $lat, $lon);
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_nom_location']['#options'] = $this->getAllMateriels();
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_nom_location']['#default_value'] = $this->getDefaultValueLocation($cid);
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['adresse']['civicrm_1_contact_1_address_country_id']['#options'] = $this->allCountries();
@@ -271,8 +271,8 @@ class WebformService {
     //  $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_address_country_id']['#attributes']['disabled'] = true;
 
      $form['elements']['civicrm_1_contact_1_fieldset_fieldset']['civicrm_1_contact_1_marque']['#default_value'] = $this->getDefaultValueMarque($cid);
-   
-     
+
+
     $defaultValue = [];
     $defaultValue = [
       'phone' => $phone,
@@ -286,9 +286,9 @@ class WebformService {
     ];
 
     $form['elements']['civicrm_2_activity_1_fieldset_fieldset']['valeur_par_defaut_des_champ']['#default_value'] = json_encode($defaultValue);
-    
+
     return $form;
-    
+
   }
 
   public function getAddressIdByContactId ($contactId) {
@@ -306,13 +306,13 @@ class WebformService {
   private function generateUrlWithAfform ($cid) {
     // \Drupal::service('civicrm')->initialize();
     // $afform = [
-    //   'server_route' => '/civicrm/verifie-agence-liste', 
+    //   'server_route' => '/civicrm/verifie-agence-liste',
     //   'is_public' => 1,
     // ];
     // $url = \Civi\Afform\Tokens::createUrl($afform, 24473);
     // dump($url);
     // redirect($url);
-  }  
+  }
 
 
 
@@ -335,11 +335,11 @@ public function areMultidimensionalArraysEqual($array1, $array2) {
     // Flatten and sort both arrays
     $flattened1 = $this->flattenAndSort($array1);
     $flattened2 = $this->flattenAndSort($array2);
-    
+
     // Compare the flattened and sorted arrays
     return $flattened1 == $flattened2;
 }
-  
+
   public function getContactIdByEmail ($email) {
     $db = \Drupal::database();
     if ($email) {
@@ -355,7 +355,7 @@ public function areMultidimensionalArraysEqual($array1, $array2) {
   }
 
   /**
-   * Mise à jour matériel occasion 
+   * Mise à jour matériel occasion
    */
   public function updateMaterielOccasion ($cid, $materielOccasion) {
     return \Civi\Api4\Contact::update(FALSE)
@@ -370,15 +370,15 @@ public function areMultidimensionalArraysEqual($array1, $array2) {
       ->addWhere('value', 'IN', $materiel_location)
       ->addWhere('option_group_id', '=', 106)
       ->execute()->getIterator();
-      $optionValues = iterator_to_array($optionValues); 
+      $optionValues = iterator_to_array($optionValues);
       $optionValues = array_column($optionValues, 'label');
 
       $delimiter = ', ';
       $joinedString = implode($delimiter, $optionValues);
-      
+
       // Remove the last comma
       $joinedString = rtrim($joinedString, $delimiter);
-      
+
       return $joinedString;
   }
 
@@ -419,7 +419,7 @@ public function areMultidimensionalArraysEqual($array1, $array2) {
         // If not the last element, add ", " as a separator
         $marqueLabel .= ', ';
       }
-    } 
+    }
     return $marqueLabel;
   }
 
@@ -432,7 +432,7 @@ public function areMultidimensionalArraysEqual($array1, $array2) {
 
   private function html($rue, $postal,$city, $country, $lat, $lon) {
     return '<div class="our-ebook"><div class="container">
-              <div class="row adress-container"><div class="col-6 d-none d-lg-block"> 
+              <div class="row adress-container"><div class="col-6 d-none d-lg-block">
               </div>
               <div class="col col-lg-6 conteneur-block">
                 <div class="our-ebook-cont">
@@ -443,7 +443,7 @@ public function areMultidimensionalArraysEqual($array1, $array2) {
                   <p>' . $postal . ' ' . $city . '</p>
                   <p>' . $country . '</p>
                   </div>
-                  
+
                   </div>
                 </div>
               </div>
@@ -467,7 +467,7 @@ public function areMultidimensionalArraysEqual($array1, $array2) {
       $query = 'select field_video_guide_target_id from civicrm_contact__field_video_guide where entity_id = ' . $cid;
       $video_id = $db->query($query)->fetch()->field_video_guide_target_id;
       if ($video_id) {
-        
+
         $query = 'select field_media_oembed_video_value from media__field_media_oembed_video where entity_id = ' . $video_id;
         $video_url = $db->query($query)->fetch()->field_media_oembed_video_value;
       }
@@ -479,12 +479,12 @@ public function areMultidimensionalArraysEqual($array1, $array2) {
    * Les matériels location lié à l'entreprise
    */
   private function getDefaultValueLocation ($cid) {
-    
+
     $materiel_location = \Civi\Api4\Contact::get(FALSE)
       ->addSelect('Materiel.nom_location')
       ->addWhere('id', '=', $cid)
       ->execute()->getIterator();
-      $rentals = iterator_to_array($materiel_location); 
+      $rentals = iterator_to_array($materiel_location);
       $rentals = $rentals[0]['Materiel.nom_location'];
       return $rentals;
   }
@@ -493,18 +493,18 @@ public function areMultidimensionalArraysEqual($array1, $array2) {
    * Les matériels location lié à l'entreprise
    */
   private function getDefaultValueOccasion ($cid) {
-    
+
     $materiel_location = \Civi\Api4\Contact::get(FALSE)
       ->addSelect('Materiel.nom_occasion')
       ->addWhere('id', '=', $cid)
       ->execute()->getIterator();
-      $rentals = iterator_to_array($materiel_location); 
+      $rentals = iterator_to_array($materiel_location);
       $rentals = $rentals[0]['Materiel.nom_occasion'];
       return $rentals;
   }
 
   /**
-   * 
+   *
    */
   private function getLatAndLondeDefaultValue($cid, $lat = true) {
 
@@ -513,14 +513,14 @@ public function areMultidimensionalArraysEqual($array1, $array2) {
       ->addWhere('contact_id', '=', $cid)
       ->addWhere('is_primary', '=', TRUE)
       ->execute()->getIterator();
-      
-      $latitudeAndLongitude = iterator_to_array($latitudeAndLongitude); 
+
+      $latitudeAndLongitude = iterator_to_array($latitudeAndLongitude);
       if ($lat) {
         return $latitudeAndLongitude[0]['geo_code_1'];
       }
       return $latitudeAndLongitude[0]['geo_code_2'];
   }
-  
+
 
   public function getOrganizationName($cid) {
     return \Civi\Api4\Contact::get(FALSE)
@@ -539,16 +539,16 @@ public function areMultidimensionalArraysEqual($array1, $array2) {
       ->addSelect('value', 'label')
       ->addWhere('option_group_id', '=', 100)
       ->execute()->getIterator();
-      
+
     $optionValues = iterator_to_array($optionValues);
     foreach ($optionValues as $key => $value) {
       $option[$value['value']] = $value['label'];
     }
-    
-    
-    
+
+
+
     return $option;
-    
+
   }
 
   private function getDefaultValueMarque ($cid) {
@@ -556,7 +556,7 @@ public function areMultidimensionalArraysEqual($array1, $array2) {
     ->addSelect('nom_Marque')
     ->addWhere('entity_id', '=', $cid)
     ->execute()->getIterator();
-    
+
     $defaultValue = iterator_to_array($defaultValue);
     $defaultValue = array_column($defaultValue, 'nom_Marque');
 
@@ -592,7 +592,7 @@ public function areMultidimensionalArraysEqual($array1, $array2) {
       'bundle' => 'remote_video',
       'langcode' => 'fr', // La langue du média
       'status' => TRUE, // Définissez-le sur TRUE pour publier le média immédiatement
-      'field_media_oembed_video' => $urlVideo, 
+      'field_media_oembed_video' => $urlVideo,
     ]);
 
     // Enregistrez le média.
@@ -609,7 +609,7 @@ public function areMultidimensionalArraysEqual($array1, $array2) {
   public function assignVideoToEntreprise ($cid, $mid, $db) {
     $check_if_already_exist_query = 'select * from civicrm_contact__field_video_guide where entity_id = ' . $cid;
     $if_already_exist = $db->query($check_if_already_exist_query)->fetch();
-    
+
     if (!$if_already_exist) {//insert
       // Get the database connection.
       $database = \Drupal::database();
@@ -631,7 +631,7 @@ public function areMultidimensionalArraysEqual($array1, $array2) {
         ->execute();
     }else { //update
       $query = 'UPDATE civicrm_contact__field_video_guide  SET field_video_guide_target_id = ' . $mid . ' where entity_id = ' . $cid;
-      $db->query($query)->execute(); 
+      $db->query($query)->execute();
     }
   }
 
@@ -647,7 +647,7 @@ public function deleteVideoLinkedWithCid($cid) {
 
 public function updatedb ($cid, $mid)  {
 
-  
+
   // Get the database connection.
     /* $database = \Drupal::database();
 
@@ -677,7 +677,7 @@ public function updatedb ($cid, $mid)  {
 
 
     /**
-   * 
+   *
    */
 public function encryptString($id) {
   $cipher = 'AES-256-CBC';
@@ -695,7 +695,7 @@ public function redirectHomePage () {
 }
 
 /**
- * 
+ *
  */
 public function decryptString($encryptedId) {
   $cipher = 'AES-256-CBC';
@@ -717,7 +717,7 @@ public function getAllMaterielOccasion () {
   ->addSelect('id', 'value', 'label')
   ->addWhere('option_group_id', '=', 107)
   ->execute()->getIterator();
-  $materielOccasion = iterator_to_array($materielOccasion); 
+  $materielOccasion = iterator_to_array($materielOccasion);
 
   // Tableau résultat
   $newArray = [];
@@ -737,14 +737,14 @@ public function getAllMateriels () {
   ->addWhere('option_group_id', '=', 106)
   ->addWhere('is_active', '=', true)
   ->execute()->getIterator();
-      
+
     $optionValues = iterator_to_array($optionValues);
     foreach ($optionValues as $key => $value) {
       $option[$value['value']] = $value['label'];
     }
-    
-    
-    
+
+
+
     return $option;
 
 }
@@ -860,12 +860,12 @@ public function updatePhone ($data_phone, $cid) {die('recea');
 
       }else {
         //$this->redirectHomePage();
-      } 
+      }
   }
 }
 
 /**
- *  Correspondance entre location et location_new 
+ *  Correspondance entre location et location_new
  */
 public static function getFamilleByLocation($materiel_id) {
   $whiteslist = [];
@@ -1082,21 +1082,21 @@ public function allCountries () {
   $countries = \Civi\Api4\Country::get(FALSE)
   ->addSelect('id', 'name')
   ->execute()->getIterator();
-      
+
   $optionValues = iterator_to_array($countries);
   foreach ($optionValues as $key => $value) {
     $option[$value['id']] = t($value['name']);
   }
-  
-  
-  
+
+
+
   return $option;
 }
 
 
 
   public function whiteList () {
-   
+
     $array = [
       'formulaire_pour_adherent',
       "backbuttonblock",
@@ -1187,8 +1187,8 @@ public function allCountries () {
       'developper',
       'plain_text',
     ];
-    
-    
+
+
     return $array;
   }
 
@@ -1205,7 +1205,7 @@ public function allCountries () {
           $html .= $valueDetail . '<br>';
         }
       }
-      
+
       return \Civi\Api4\Activity::create(FALSE)
       ->addValue('activity_type_id', self::ID_TYPE_ACTIVITE_UPDATE_BY_ADHERENT)
       ->addValue('subject', $subject)
@@ -1219,10 +1219,10 @@ public function allCountries () {
         ->execute();
     }
   }
-  
+
   public function getAddressID ($cid) {
     $civicrm = \Drupal::service('civicrm');
-    $civicrm->initialize();     
+    $civicrm->initialize();
 
     $addresses = \Civi\Api4\Address::get(FALSE)
       ->addSelect('id')
@@ -1256,10 +1256,10 @@ public function allCountries () {
    \Drupal::service('session')->set('webform_confirmation_token', $token_hex);
 
     $confirmation_page_link = '/form/formulaire-pour-adherent/confirmation?token='. $token_hex;
- 
+
    // Par exemple, pour le stocker dans la session :
    return $confirmation_page_link;
- 
+
   }
 
 }
