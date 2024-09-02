@@ -80,7 +80,7 @@ class WebformService {
     $isValidateChecksum = $this->CustomizeValidateChecksum($cid, $checksum);
 
 
-    if (!$isValidateChecksum) {//check si c'est le bon contact id TODO REMETTRE çA pOUR LA PROD
+    if (!$isValidateChecksum) {//check si c'est le bon contact id rediriger vers la page home
       return $this->redirectHomePage();
     }
 
@@ -301,7 +301,7 @@ class WebformService {
 
 
 /**
- * TODO GENERATE URL
+ * 
  */
   private function generateUrlWithAfform ($cid) {
     // \Drupal::service('civicrm')->initialize();
@@ -711,7 +711,7 @@ public function decryptString($encryptedId) {
   return $decryptedId;
 }
 
-//TODO TODO
+//recuperation des materiels d'occasion
 public function getAllMaterielOccasion () {
   $materielOccasion = \Civi\Api4\OptionValue::get(FALSE)
   ->addSelect('id', 'value', 'label')
